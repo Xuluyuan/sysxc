@@ -80,4 +80,50 @@
 }
 ```
 
-## 
+## 1.3. 商品分类管理
+
+### 1.3.1. 商品分类数据列表
+
+- 请求路径：categoray
+- 请求方法：get
+
+- 响应参数
+
+| 参数名   | 参数说明 | 备注 |
+| -------- | -------- | ---- |
+| cat_id   | 分类 ID  |      |
+| cat_name | 分类名称 |      |
+| cat_icon | 分类图片 |      |
+
+- 响应数据
+
+```json
+{
+    "message": "获取成功",
+    "code": 200,
+    "results": [
+        {
+            "cat_id": 1,
+            "cat_name": "大家电",
+            "cat_icon": ""
+        },
+        {
+            "cat_id": 3,
+            "cat_name": "电视",
+            "cat_icon": ""
+        },
+        {
+            "cat_id": 4,
+            "cat_name": "空调",
+            "cat_icon": ""
+        },
+        {
+            "cat_id": 5,
+            "cat_name": "4K超高清",
+            "cat_icon": "full/fd99414907afb2e0382456b55ae051e51f9816f5.jpg"
+        },
+      ]
+}
+```
+
+### 

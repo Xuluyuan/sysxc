@@ -49,3 +49,13 @@ app.post('/login',(req,res)=>{
     }
   })
 })
+//获取商品分类的接口
+app.get('/categoray',(req,res)=>{
+  let sql='select cat_id,cat_name,cat_icon from sp_category'
+  pool.query(sql,(err,results)=>{
+    if(err) throw err;
+    res.send({message:'获取成功',code:200,results:results})
+  })
+})
+//获取商品详情的接口（包括分页查询）
+app.get('/list')

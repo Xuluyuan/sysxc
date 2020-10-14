@@ -51,5 +51,20 @@ CREATE TABLE sorder(
     order_createtime date not null comment '订单创建时间',
     order_completiontime date not null comment '订单完成时间',
     order_status enum('0','1','2','3') not null comment '订单状态',
-    
+    order_pay enum('1','2') not null comment '支付状态',
+    order_uid int not null comment '订单所属用户id',
+    FOREIGN KEY(order_uid) REFERENCES suser(uid)
+);
+
+#创建订单详情表sorder_details
+CREATE TABLE sorder_details(
+    order_id int not null comment '订单编号',
+    order_product_id int not null comment '商品编号',
+    order_product_name varchar(128) not null comment '商品名称',
+    order_product_total decimal(9,2) not null comment '商品总金额',
+    order_product_count int not null comment '商品数量',
+    order_product_pic varchar(128) comment '商品图片',
+    order_user_address varchar(128) not null comment '用户地址',
+    FOREIGN KEY(order_id) REFERENCES sorder(oid),
+    FOREIGN KEY(order_product_id) REFERENCES sproduct_details(pid)
 );

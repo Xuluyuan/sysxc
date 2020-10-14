@@ -126,4 +126,44 @@
 }
 ```
 
-### 
+### 1.3.2. 商品详情验证接口
+
+- 请求路径：lists
+- 请求方法：get
+- 请求参数
+
+| 参数名 | 参数说明           | 备注     |
+| ------ | ------------------ | -------- |
+| lid    | 商品分类ID         | 不能为空 |
+| page   | 当前用户提交的页码 | 不能为空 |
+
+- 响应参数
+
+| 参数名           | 参数说明 |
+| ---------------- | -------- |
+| goods_id         | 商品ID   |
+| goods_name       | 商品名称 |
+| goods_price      | 商品价格 |
+| goods_introduce  | 商品介绍 |
+| goods_small_logo | 商品图片 |
+
+- 响应数据
+
+```json
+{
+    "message": "查询成功",
+    "code": 1,
+    "result": [
+        {
+            "goods_id": 701,
+            "goods_name": "TCL 55A950C 55英寸 前置音响 人工智能 金属超薄 64位32核 4K+HDR 超高清智能 曲面电视（枪色）",
+            "goods_price": 3999,
+            "goods_introduce": "<div class=\"lazyimg\"><p><a href=\"https://cuxiao.suning.com/hd20161212.html\" target=\"_blank\"><img data-src=\"https://image.suning.cn/uimg/sop/commodity/132054885810478629024824_x.jpg?from=mobile&amp;format=80q.webp\" alt=\"\" from=mobile&format=80q.webp\" width=\"100%\" height=\"auto\"></a></p><p> </p></div></div>",
+            "goods_small_logo": ""
+        }
+    ],
+    "_pageCount": 1
+}
+```
+
+## 

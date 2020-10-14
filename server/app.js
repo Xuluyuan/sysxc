@@ -58,4 +58,26 @@ app.get('/categoray',(req,res)=>{
   })
 })
 //获取商品详情的接口（包括分页查询）
-app.get('/list')
+app.get('/lists',(req,res)=>{
+  let lid=req.query.lid
+  let page=req.query.page;//客户端传递的当前页码
+  let pageCount=15;//每页显示的记录数
+  let start=(page-1)*pageCount;
+  let _count=0;
+  let _pageCount=0;
+  // let sql='select id,subject,description,image from xzqa_article where category_id=?limit '+start+','+pageCount
+  let sql=`select goods_id,goods_name,goods_price,goods_introduce,goods_small_logo from sp_goods where cat_id= ? limit ${start},${pageCount}`
+  pool.query(sql,[lid],(err,result)=>{
+    if(err) throw err;
+    ////////
+    //1.获取总记录数
+    sql='select count(goods_id) as count from sp_goods where cat_id=?';
+    pool.query(sql,[lid],(err,results)=>{
+      // console.log(result[0].count)
+      _count=results[0].count
+      //2.计算总页数
+      _pageCount=Math.ceil(_count/pageCount)
+      res.send({message:'查询成功',code:1,result:result,_pageCount:_pageCount})
+    })
+  })  
+})

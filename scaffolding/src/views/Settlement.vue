@@ -13,14 +13,12 @@
             <div class="mian_container">
                 <ul class="shop">
                     <li>
-                        <p class="shop_title">2786书亦烧仙草深圳龙华星光城店</p>
-                        <p class="shop_distance">你距离当前门店6.9km</p>
+                        <mt-cell title="2786书亦烧仙草深圳龙华星光城店" label="你距离当前门店6.9km"></mt-cell>
                     </li>
                     <li>
-                        <p slot="left">取餐时间</p>
-                        <span>
-                            我已到店<button slot="right"></button>
-                        </span>
+                        <mt-cell title="取餐时间" is-link>
+  <span style="color: #aaa">我已到店 </span>
+</mt-cell>
                     </li>
                     <li>
                         <span>用餐方式</span>
@@ -74,5 +72,20 @@
     .mian_container li:not(:last-child)  {
         border-bottom: 1px solid #ececec;
     }
+    
+    /* 可能修改 */
+    .settlement .mint-cell {
+        min-height: 0;
+    }
+    .settlement .mint-cell:last-child {
+        background-image: none;
+        background-position: 0;
+    }
+    .settlement .mint-cell-wrapper {
+        background-image: none;
+        padding: 0;
+    }
+ 
     /* 面板结束 */
+    
 </style>

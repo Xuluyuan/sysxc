@@ -81,3 +81,48 @@ app.get('/lists',(req,res)=>{
     })
   })  
 })
+// 插入订单接口
+app.post('/add',(req,res)=>{
+  let obj=req.body
+  let sql='insert into sp_consignee set ? '
+  pool.query(sql,[obj],(err,result)=>{
+    if(err) throw err;
+    if(result.affectedRows>0){
+      res.send({message:'插入成功',code:200})
+    }else{
+     res.send({code:400,msg:"插入失败"});
+    }
+   })
+ })
+
+// 查询订单接口
+app.get('/getOrder',(req,res)=>{
+  var pid=req.query.pid;
+  pool.query("select * from sp_order where order_id=?",[pid],(err,result)=>{
+    if(err) throw err;
+    res.send(result)
+  })
+})
+
+ //添加用户地址接口
+ app.post('/address',(req,res)=>{
+  let obj=req.body
+  let sql='insert into sp_consignee set ? '
+  pool.query(sql,[obj],(err,result)=>{
+    if(err) throw err;
+    if(result.affectedRows>0){
+      res.send({message:'插入成功',code:200})
+    }else{
+     res.send({code:400,msg:"插入失败"});
+    }
+   })
+ })
+ //查看用户地址接口
+ app.get('/getAddress',(req,res)=>{
+  var did=req.query.did;
+  pool.query("select cgn_name,cgn_address,cgn_tel from sp_consignee where user_id=?",[did],(err,result)=>{
+    if(err) throw err;
+    res.send(result)
+    console.log(result)
+  })
+})

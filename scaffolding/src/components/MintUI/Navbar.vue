@@ -5,19 +5,19 @@
                 <mt-navbar  v-model="active">
                 <mt-tab-item id="1">
                     HTML5
-                    <img src="../../assets/imags/html5.png" slot="icon">
+                    <img src="../../assets/images/html5.png" slot="icon">
                 </mt-tab-item>
                 <mt-tab-item id="2">
                     CSS3
-                    <img src="../../assets/imags/css3.png" slot="icon">
+                    <img src="../../assets/images/css3.png" slot="icon">
                 </mt-tab-item>
                 <mt-tab-item id="3">
                     javaScript 
-                    <img src="../../assets/imags/javascript.png" slot="icon">
+                    <img src="../../assets/images/javascript.png" slot="icon">
                 </mt-tab-item>
                 <mt-tab-item id="4">
                     jQuery 
-                    <img src="../../assets/imags/jquery.png" slot="icon">
+                    <img src="../../assets/images/jquery.png" slot="icon">
                 </mt-tab-item>
             </mt-navbar>
         </div>
@@ -37,18 +37,18 @@
         <mt-tabbar v-model="tabbar" fixed>
             <mt-tab-item id="index">
                 首页
-                <img src="../../assets/imags/index_disabled.png"  slot="icon" v-if="tabbar != 'index'">
-                <img src="../../assets/imags/index_enabled.png" slot="icon" v-else>
+                <img src="../../assets/images/index_disabled.png"  slot="icon" v-if="tabbar != 'index'">
+                <img src="../../assets/images/index_enabled.png" slot="icon" v-else>
             </mt-tab-item>
              <mt-tab-item id="cart">
                 购物车
-                <img src="../../assets/imags/cart_enabled.png" slot="icon" v-if="tabbar == 'cart'">
-                <img src="../../assets/imags/cart_disabled.png" slot="icon" v-else>
+                <img src="../../assets/images/cart_enabled.png" slot="icon" v-if="tabbar == 'cart'">
+                <img src="../../assets/images/cart_disabled.png" slot="icon" v-else>
             </mt-tab-item>
              <mt-tab-item id="me">
                 我的
-                <img src="../../assets/imags/me_enabled.png" slot="icon" v-if="tabbar == 'me'">
-                <img src="../../assets/imags/me_disabled.png" slot="icon" v-else>
+                <img src="../../assets/images/me_enabled.png" slot="icon" v-if="tabbar == 'me'">
+                <img src="../../assets/images/me_disabled.png" slot="icon" v-else>
             </mt-tab-item>
         </mt-tabbar>
     </div>

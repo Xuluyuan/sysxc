@@ -16,9 +16,20 @@
                         <mt-cell title="2786书亦烧仙草深圳龙华星光城店" label="你距离当前门店6.9km"></mt-cell>
                     </li>
                     <li>
-                        <mt-cell title="取餐时间" is-link>
-                            <span class="mint-cell-value">我已到店</span>
+                        <mt-cell title="取餐时间" is-link @click.native="way">
+                            <span class="mint-cell-value" >我已到店</span>
                         </mt-cell>
+                        <mt-popup
+                            v-model="popupVisible"
+                            position="bottom">
+                            <div class="way_popup">
+                                <div>
+                                    <span class="cancel" @click="popupVisible = false">取消</span>
+                                    <span class="affirm" @click="addrConfirm">确认</span>
+                                </div>
+                                <mt-picker ref='picker' :slots="slots" value-key='name' @change="onValuesChange"></mt-picker>
+                            </div>
+                        </mt-popup>
                     </li>
                     <li>
                         <mt-cell title="用餐方式">
@@ -255,6 +266,25 @@
     }
     /* 底部结束 */
 
+    /* 用餐方式弹窗开始 */
+    .settlement .mint-popup-bottom {
+        width: 100%;
+        padding: 15px;
+    }
+    
+    .way_popup {
+        height: 300px;
+        padding: 0 15px;
+    }
+    .way_popup .cancel {
+        float: left;
+        color: #000;
+    }
+    .way_popup .affirm {
+        float: right;
+        color: #07C160;
+    }
+    /* 用餐方式弹窗结束 */
     /* #EAB488 */
 </style>
 <script>
@@ -271,14 +301,30 @@ export default {
                 label: '店内用餐',
                 value: 'shop'
             }],
-            integralVal: false
+            integralVal: false,
+            popupVisible: false,
+            product: '',
+            slots: [{
+                values: [{
+                    id: 0,
+                    name: "我已到店"
+                } ],
+            }],
            
         }
     },
     methods: {
-        // pack(event) {
-        //     console.log(event)
-        // }
+        // 取餐时间
+        way() {
+            this.popupVisible = true;
+        },
+        onValuesChange(picker, values) {
+            this.product = values[0].name;
+        },
+        addrConfirm() {
+            console.log(this.product)
+            this.popupVisible = false;
+        },
     },
     watch: {
         valueChoose(val) {

@@ -58,11 +58,55 @@
                         </mt-cell>
                     </li>
                     <li>
-                        <div class="coupon">
-                            <mt-cell title="优惠卷" is-link>
+                        <div class="coupon" @click= "coupon()">
+                            <mt-cell title="优惠卷" is-link >
                                 <span class="juan">有2张可用优惠卷</span>
                                 <img slot="icon" src="../assets/images/juan.png" >
                             </mt-cell>
+                        </div>
+                        <div class="coupon_header">
+                            <mt-popup
+                            v-model="couponVisible"
+                            position="bottom">
+                            <mt-header title="我的优惠卷" fixed ></mt-header>
+                            <div class="coupon_mian">
+                                <div class="coupon_flex">
+                                    <div class="line"></div>
+                                    <div>可用优惠卷(两张)</div>
+                                    <div class="line"></div>
+                                </div>
+                                <div class="coupon_container">
+                                    <div class="coupon_div">
+                                        <mt-cell title="¥3" label="满20元可用">
+                                        <div class="coupon_explain">
+                                            <p class="minus">满20减3元优惠卷</p>
+                                            <p class="deadline">6天后到期</p>
+                                            <p class="coupon_name">互斥卷</p>
+                                        </div>
+                                        <mt-radio align="right" v-model="valueCoupon" :options="coupon_options"></mt-radio>
+                                    </mt-cell>
+                                    </div>
+                                    
+                                    <p class="p_hint">查看详情 ></p>
+                                    <div style="clear: both"></div>
+                                </div>
+                                <div class="coupon_container">
+                                    <div class="coupon_div">
+                                        <mt-cell title="9折" label="满20元可用">
+                                        <div class="coupon_explain">
+                                            <p class="minus">夏季新品九折卷</p>
+                                            <p class="deadline">20天后到期</p>
+                                            <p class="coupon_name">互斥卷</p>
+                                        </div>
+                                        <mt-radio align="right" v-model="valueCoupon" :options="coupon_options"></mt-radio>
+                                    </mt-cell>
+                                    </div>
+                                    
+                                    <p class="p_hint">查看详情 ></p>
+                                    <div style="clear: both"></div>
+                                </div>
+                            </div>
+                            </mt-popup>
                         </div>
                     </li>
                     <li>
@@ -77,7 +121,7 @@
                 <ul>
                     <li>
                         <mt-cell title="使用积分" label="共0积分，每10积分可抵¥1">
-                            <mt-switch v-model="integralVal" disabled></mt-switch>
+                            <mt-switch v-model="integralVal" disabled @click.native="integrals($event)"></mt-switch>
                             <img slot="icon" src="../assets/images/jifen.png" >
                         </mt-cell>
                     </li>
@@ -286,6 +330,64 @@
     }
     /* 用餐方式弹窗结束 */
     /* #EAB488 */
+     .coupon_header .mint-header {
+        height: 50px;
+    }
+    .coupon_header .mint-header-title {
+        font-weight: 400;
+        font-size: 15px;
+        color: #000;
+    } 
+    .coupon_mian {
+        margin-top: 35px;
+        background-color: #f3f3f3;
+        padding: 10px;
+    }
+    .coupon_flex {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding: 5px 0 15px 0;
+    }
+    .coupon_header .line {
+        display: inline-block;
+        width: 85px;
+        border-bottom: 1px solid #cbcbcb;
+    }
+    .coupon_container {
+        background-color: #fff;
+        padding: 10px;
+    }
+    .settlement .coupon_container .mint-cell-text {
+        font-size: 35px;
+        font-weight: 500;
+        color: #EAB488;
+    }
+     .coupon_container .coupon_div {
+        border-bottom: 1px dashed #cbcbcb;
+        margin-bottom: 10px;
+        padding: 12px 0;
+    }
+    .coupon_container:not(:last-child) {
+        margin-bottom: 10px;
+    } 
+    .coupon_explain {
+        margin-right: 62px;
+        color: #333;
+        line-height: 20px;
+    }
+    .coupon_explain .minus {
+        font-size: 14px;
+    }
+    .coupon_explain .deadline {
+        font-size: 12px;
+    }
+    .coupon_explain .coupon_name {
+        display: inline-block;
+        font-size: 14px;
+        color: #F32D09;
+        background-color: #FEEAE6;
+    }
 </style>
 <script>
 import $ from '../comoon/js/jquery-1.11.3';
@@ -302,7 +404,9 @@ export default {
                 value: 'shop'
             }],
             integralVal: false,
+            integral: 20,
             popupVisible: false,
+            couponVisible: false,
             product: '',
             slots: [{
                 values: [{
@@ -310,7 +414,11 @@ export default {
                     name: "我已到店"
                 } ],
             }],
-           
+            valueCoupon: '',
+            coupon_options : [{
+              label: ' ',
+                value: '-3'
+           }]
         }
     },
     methods: {
@@ -325,6 +433,16 @@ export default {
             console.log(this.product)
             this.popupVisible = false;
         },
+        // 优惠卷
+        coupon() {
+            this.couponVisible = true;
+        },
+        // 积分
+        integrals(event) {
+            if(this.integral >= 10) {
+                event.target.disable = true;
+            }
+        }
     },
     watch: {
         valueChoose(val) {

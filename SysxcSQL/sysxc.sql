@@ -14,14 +14,32 @@ CREATE TABLE suser(
     user_password varchar(32) not null comment '用户密码',
     user_sex tinyint(2) not null comment '用户性别',
     user_tellphone char(11) not null UNIQUE comment '手机号码',  
-    user_birthday date not null comment '用户生日',
-    user_wechat varchar(32) not null UNIQUE comment '用户微信er_id'
+    user_birthday date not null comment '用户生日'
 );
+
+#插入数据用户表suser
+INSERT INTO suser (`uid`, `user_name`, `user_password`, `user_sex`, `user_avatar`, `user_tellphone`,`user_birthday`) VALUES
+(null, 'Richard', 'qweasdzxc123',1, '00183a5ab206aea80120be1472a6f5.jpg', '13729394959','1982-10-19'),
+(null, 'Johnny', '852741963zxc',2, '001f075ad3feeda8012138670b58f0.jpg', '15818283848', '1982-10-19'),
+(null, 'Martin', '852753zxcasd',1, '008c8f59e96a55a801216a4bbcbcb0.jpg', '14727374757', '1982-10-19'),
+(null, 'Christina', 'qscesz753951',2, '00adca5a0d93daa80121985c9ef05f.jpg','13616263646', '1982-10-19'),
+(null, 'Margaret', 'qwecxz789321',1, '00b2e259575a7da8012193a331099a.jpg', '19858494736', '1982-10-19'),
+(null, 'Barbara', '852963741wsx',1 , '00b3755b2b6eb6a8012034f78d8b5b.jpg','15311223344', '1982-10-19'),
+(null, 'Diana', '12345678edc', 1, '00c1d55af1178ca801206abad941b6.jpg','15645675395', '1982-10-19'),
+(null, 'Melody', '987654321qaz', 2, '00d1345abc83d5a801218207516561.jpg','13525875698','1982-10-19'),
+(null, 'Debbie', '951753654asd', 2, '00d4325a72b3b6a8012134661d177d.jpg','15845896324', '1982-10-19'),
+(null, 'Scott', '852123qwe', 1, '00da335a266f21a80120ba3858f56a.jpg','15863475395','1982-10-19');
+
+
 
 #创建用户地址表suser_address
 CREATE TABLE suser_address(
     aid int primary key auto_increment comment '地址编号',
+    a_name varchar(20) not null comment '联系人',
+    a_sex tinyint(2) not null comment '性别',
+    a_tellphone char(11) not null comment '手机号',
     address varchar(128) not null comment '地址',
+    address_doorid varchar(32) not null comment '门牌号',
     address_id int  not null comment '所属用户id', 
     FOREIGN KEY(address_id) REFERENCES suser(uid) 
 );
@@ -132,6 +150,9 @@ INSERT INTO sproduct_details VALUES(null,'红豆',2.00,'口感绵实丰富','159
 INSERT INTO sproduct_details VALUES(null,'黑砖冻',2.00,'黑砖冻爽滑入口','1590742871768.jpg',6,'');
 INSERT INTO sproduct_details VALUES(null,'调温度/甜度',0.01,'为保证每杯饮品口感,我们严格把控甜度与温度/冰量,如因个人喜好、天气等原因,部分饮品您可以和店员沟通需求,但定制饮品定量出杯,暂时无法更改用量,还请您谅解','1582967061018.jpg',7,'');
 INSERT INTO sproduct_details VALUES(null,'点单须知',999.00,'商家接单后立即制作,如需退款,及时电话联系商家取消订单','1582967034224.jpg',7,'');
+
+
+
 
 
 

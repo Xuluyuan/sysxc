@@ -339,10 +339,12 @@ export default {
   width: 60px;
   height: 25px;
   line-height: 25px;
-  margin-left: 43px;
+  margin-left: 30px;
 }
 .ordermeal .dec-price{
   font-size: 16px;
+  display: inline-block;
+  width: 70px;
 }
 .ordermeal .desc-type{
   text-align: center;

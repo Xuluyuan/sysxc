@@ -93,7 +93,7 @@ export default {
       let btns=document.querySelectorAll('.temp button');
       let btn1s=document.querySelectorAll('.tian button');
       let arr=[...btns,...btn1s];
-      console.log(arr)
+      // console.log(arr)
       //初始化变量，记录没有选择规格的按钮数量
       let c=0;
       arr.forEach((btn)=>{

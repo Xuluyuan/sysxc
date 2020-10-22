@@ -1,7 +1,7 @@
 <template>
 <!-- <div class="foot" id="cart"> -->
-<div class="foot" id="cart"  >
-    <!-- v-show="totalCount>0" -->
+<div class="foot" id="cart" v-show="totalCount>0" >
+    
     <div class="left_cart" @click="cartDetails(indicator)">
         <img src="../assets/images/cart.png" alt="">
         <span class="foot_sum">合计￥{{totalPrice}}元</span>
@@ -54,26 +54,30 @@ export default {
     //使用计算属性 计算总价和购买数量
     computed:{
         //遍历饮料列表，得到对应的饮料的价格.数量通过vuex中的初始化数量加上遍历得到的下标值取到
-        totalPrice(){
-           let totalPrice=0; 
-            this.drinks.forEach((ps,i) => {
-                     ps.forEach((p,i1)=>{
-                         totalPrice+=p.price*p.count
-                     })
-            });
-            console.log( totalPrice)
-            return  totalPrice; 
-        },
         totalCount(){
-            let totalCount=0; 
-            this.drinks.forEach((ds,i) => {
-                     ds.forEach((d,i1)=>{
-                         totalCount+=d.count
-                     })
-            });
-            console.log(totalCount)
-            return totalCount;
-        },  
+            let totalCount=0;
+            this.$store.state.btn_count.forEach((counts,index)=>{
+                counts.forEach((count,index1)=>{
+                    if(count>0){
+                        totalCount+=count;
+                    }
+                })
+            })
+            // console.log(totalCount)
+            return totalCount
+        },
+        totalPrice(){
+            let totalPrice=0;
+            this.$store.state.btn_count.forEach((counts,index)=>{
+                counts.forEach((count,index1)=>{
+                    if(count>0){
+                        totalPrice+=count*this.drinkList[index][index1].product_price
+                    }
+                })
+            })
+            // console.log(totalPrice)
+            return totalPrice
+        }, 
     },
     watch:{
         totalPrice(){
@@ -89,7 +93,7 @@ export default {
         },
         cartDetails(indicator){
             let lis=document.querySelectorAll(".drink")
-            console.log(lis)
+            // console.log(lis)
             //将数量大于1的产品的数量、价格、标题、客户所选规格加入到data中的drinks数组中.
             if(indicator==0){
                 let cartDrinkLists1=[];
@@ -182,7 +186,7 @@ export default {
                 })
              }
             this.drinks=[this.drinks1,this.drinks2,this.drinks3,this.drinks4,this.drinks5,this.drinks6,this.drinks7,this.drinks8]
-            console.log(this.drinks)
+            // console.log(this.drinks)
             //获取防护层div和购物车列表div
             if(this.$store.state.mask==false && this.$store.state.cartListShow==false && this.drinks.length>0){
                 this.$store.commit("changeCartList",true)

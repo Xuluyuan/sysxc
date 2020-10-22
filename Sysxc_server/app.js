@@ -92,7 +92,7 @@ app.get('/lists',(req,res)=>{
 //用户搜索模糊查询
 app.get('/like',(req,res)=>{
   let like=req.query.like
-  let sql="select pid,product_name,product_price,product_describe,product_pic,product_id,product_labelname from sproduct_details where product_describe like '% ? %'"
+  let sql="select pid,product_name,product_price,product_describe,product_pic,product_id,product_labelname from sproduct_details where product_describe like ?"
   pool.query(sql,[like],(err,result)=>{
     if(err) throw err;
       res.send({message:'查询成功',code:1,result:result})

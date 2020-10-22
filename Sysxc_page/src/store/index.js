@@ -9,9 +9,18 @@ export default new Vuex.Store({
     barId:'index',
      //标识用户是否已经登录
      isLogined:localStorage.getItem('isLogined')==1 ? localStorage.getItem('isLogined') : 0,
-     username:localStorage.getItem('isLogined')!="" ? localStorage.getItem('username') : "",
+     username:localStorage.getItem('isLogined')!="" ? localStorage.getItem('user_name') : "",
      //初始化商品数量
-     btn_count:[0,0,0,0,0,0],
+     btn_count:[
+       [0,0,0,0,0,0,0,0,0,0,0,0,0],
+       [0,0,0,0,0,0,0,0,0,0,0,0,0],
+       [0,0,0,0,0,0,0,0,0,0,0,0,0],
+       [0,0,0,0,0,0,0,0,0,0,0,0,0],
+       [0,0,0,0,0,0,0,0,0,0,0,0,0],
+       [0,0,0,0,0,0,0,0,0,0,0,0,0],
+       [0,0,0,0,0,0,0,0,0,0,0,0,0]
+      
+      ],
      //控制详情页面的防护层
      mask:false,
      //控制购物车列表的显示和隐藏
@@ -26,30 +35,36 @@ export default new Vuex.Store({
     },
     logined(state,payload){
       state.isLogined=1;
-      state.username=payload.username
+      state.user_name=payload.user_name
     },
     quit(state){
       state.isLogined=0;
       localStorage.clear()
     },
-    dec(state,i){
-      state.btn_count.forEach((c,index)=>{
-        if(i==index){
+    dec(state,payload){
+      state.btn_count[payload.n1].forEach((c,index)=>{
+        if(payload.n2==index){
             c--; 
         }
-        state.btn_count.splice(index,1,c);
+        state.btn_count[payload.n1].splice(index,1,c);
         return state.btn_count;
       })
 
     },
-    inc(state,i){
-      state.btn_count.forEach((c,index)=>{
-        if(i==index){
-          c++;
-        }
-        state.btn_count.splice(index,1,c);
+ 
+    inc(state,payload){
+      state.btn_count[payload.n1].forEach((c,index)=>{
+   
+          if(payload.n2==index){
+            c++;
+          }
+
+        
+        state.btn_count[payload.n1].splice(index,1,c);
+        // console.log(state.btn_count)
         return state.btn_count;
       })
+      
     },
     //改变防护层的显示和隐藏
     changeMask(state,isShow){
@@ -65,13 +80,17 @@ export default new Vuex.Store({
       state.specShow=specShow
     },
     //清空购物车
-    clearList(state,arr){
-      for(let n=0;n<state.btn_count.length;n++){
-        if(state.btn_count[n]>0){
-          state.btn_count[n]=0;
-          state.btn_count.splice(n,1,state.btn_count[n]);
-        }
-      } 
+    clearList(state){ 
+      state.btn_count=[
+        [0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0]
+       
+       ],
       state.mask=false;
       state.cartListShow=false;   
     }

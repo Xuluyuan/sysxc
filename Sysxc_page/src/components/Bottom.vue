@@ -1,6 +1,6 @@
 <template>
 <!-- 底部选项卡 -->
-  <div class="bottom">
+  <div class="bottom" style="margin-top:30px">
     <mt-tabbar v-model="selected" fixed>
       <mt-tab-item id="index" >
         <span id="my_index" >首页</span>

@@ -24,7 +24,7 @@
                                 <router-link to="/reg">注册</router-link>
                             </span>
                             <span v-else>
-                                <router-link to="/me">{{this.$store.state.username}}</router-link>
+                                <router-link to="/me">{{this.$store.state.user_name}}</router-link>
                                 <label >/</label>
                                 <button id="my-button" @click="quit">退出</button>
                             </span>

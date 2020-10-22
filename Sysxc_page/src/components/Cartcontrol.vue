@@ -1,13 +1,16 @@
 <template>
   <div class="cartCount">
-    <button @click="minus(btn_index)"  class="minus">-</button>
-    <label class="cart-count">{{this.$store.state.btn_count[btn_index]}}</label>
-    <button @click="add(btn_index)" class="add">+</button>
+    <button @click="minus(indicator,btn_index)"  class="minus">-</button>
+    <label class="cart-count">{{this.$store.state.btn_count[indicator][btn_index]}}</label>
+    <button @click="add(indicator,btn_index)" class="add">+</button>
   </div>
 </template>
 <script>
 // import Vue from 'vue'
 export default {
+  mounted(){
+
+  },
   props:{
     btn_index:{
        type:Number
@@ -17,16 +20,28 @@ export default {
     },
     drinks:{
       type:Array
+    },
+    indicator:{
+      type:Number
     }
   },
  methods:{
-  minus(i){
-    if(this.$store.state.btn_count[i]>0){
-      this.$store.commit('dec',i)
+   
+  minus(i1,i2){
+
+    if(this.$store.state.btn_count[i1][i2]>0){
+      this.$store.commit('dec',{
+         n1:i1,
+         n2:i2,
+      })
     }
   },
-  add(i){
-    this.$store.commit('inc',i)
+  add(i1,i2){
+    this.$store.commit('inc',{
+      n1:i1,
+      n2:i2,
+    })
+    
   }
  }
 

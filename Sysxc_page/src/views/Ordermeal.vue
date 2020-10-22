@@ -15,33 +15,38 @@
 				<p class="font_small">搜索</p>
         </router-link>
       </div>
-			<li  v-for='(desc,index) of descs' :key="index" @click="change($event,index)" data-i=index>
-				<img :src=desc.img >
-				<p class="font_small">{{desc.d}}</p>
+			<li  v-for='(desc,index) of descs' :key="index" @click="change($event,index)" >
+				<img :src=desc.class_pic >
+				<p class="font_small">{{desc.class_name}}</p>
 			</li>
 		</ul>
     <!-- 右侧商品详情 -->
    <div class="right-desc">
      <div class="cat">新品上线</div>
-     <div v-for="(drink,index) of drinkList" :key="index">
+     <div v-for="(drink,index) of drinkList[indicator]" :key="index">
        <div class="desc" @click="check($event,index)">
-          <img :src=drink.img alt="" class="spec_img">
+          <!-- <img :src="`../../public/img/${drink.class_pic}`"  alt="" class="spec_img"> -->
+           <img :src=drink.product_pic  alt="" class="spec_img">
           <div class="my_desc">
-            <p class="desc-title">{{drink.title}}</p>
-            <p class="desc-desc">{{drink.desc}}</p>
-            <span class="dec-price">￥{{drink.price.toFixed(2)}}</span>
-            <mt-button size="small" class="desc-button">选口味</mt-button>
+            <p class="desc-title">{{drink.product_name}}</p>
+            <p class="desc-desc">{{drink.product_describe}}</p>
+            <span class="dec-price">￥{{drink.product_price.toFixed(2)}}</span>
+            <mt-button size="small" class="desc-button" v-if="indicator !==6" >选口味</mt-button>
             <!-- 选口味上面的数量 -->
-            <span id="sel_num" :data-sum=index class="sum" v-show="btn_count[index]>0">{{btn_count[index]}}</span>
+            <span id="sel_num" class="sum" v-show="$store.state.btn_count[indicator][index]>0">{{$store.state.btn_count[indicator][index]}}</span>
+            <!-- <span id="sel_num" class="sum"></span> -->
             <!-- 详情页 -->
-            <my-details :drinkList="drinkList" :index="index" :check="check" :spec_title="spec_title" :desc_desc="desc_desc" :desc_type="desc_type" :spec_img="spec_img" :spec_price=" spec_price" :drink="drink" :btn_index="btn_index"  ></my-details>
+            <my-details :drinkList="drinkList" :index="index" :check="check" :spec_title="spec_title" :desc_desc="desc_desc" :desc_type="desc_type" :spec_img="spec_img" :spec_price=" spec_price" :drink="drink" :btn_index="btn_index" :indicator="indicator" ></my-details>
         </div>
       </div>
-      <div class="desc-type"><span>{{drink.type}}</span></div>
+      <div style="margin:10px 0 10px 0; height:30px">
+        <div class="desc-type"  v-if="drink.product_labelname!=''"><span>{{drink.product_labelname}}</span></div>
+      </div>
+      
     </div>
   </div>
   <!-- 购物车组件 -->
-  <my-cart :drinkList="drinkList"></my-cart>
+  <my-cart :drinkList="drinkList" :indicator="indicator"></my-cart>
   <!-- 底部选项卡 -->
   <my-bottom></my-bottom>
   <!-- 选规格页面 -->
@@ -57,35 +62,22 @@ export default {
    components:{myBottom,myCart,myDetails},
   data(){
     return{
-      descs:[
-        {d:'新品上线',img:require('../assets/images/new.png'),did:1},
-        {d:'烧仙草系列',img:require('../assets/images/xiancai.png'),did:2},
-        {d:'酸奶&益菌多系',img:require('../assets/images/suannai.png'),did:3},
-        {d:'鲜果奶茶系',img:require('../assets/images/xianguo.png'),did:4},
-        {d:'特调奶茶系',img:require('../assets/images/tediaonaicha.png'),did:5},
-        {d:'推荐小料',img:require('../assets/images/xiaoliao.png'),did:6},
-        {d:'温馨提示',img:require('../assets/images/wenxintishi.png'),did:7},
-      ],
-     drinkList: [
-            {did:1,img:'/naicha/nc1.jpg',title:'草莓啵啵酸奶',desc:'清爽的草莓搭配醇香茉莉酸奶，口感饱满，滋味酸甜',price:15.00,type:'啵啵奶茶'},
-            {did:2,img:'/naicha/nc2.jpg',title:'酸奶冰奶茶',desc:'清凉鲜爽的葡萄沙拌上醇香的茉莉酸奶，Q弹啵啵',price:17.00,type:'酸甜奶茶'},
-            {did:3,img:'/naicha/nc4.png',title:'元气桃桃',desc:'元气森林气泡水搭配饱满蜜桃，清凉爽口，元气无线',price:18.00,type:'元气新品'},
-            {did:4,img:'/naicha/nc5.jpg',title:'椰椰烧仙草',desc:'天然椰椰搭配嫩滑仙草，满口阳光暖暖的味道',price:19.00,type:'椰椰新品'},
-            {did:5,img:'/naicha/nc6.jpg',title:'书亦烧仙草',desc:'红豆、珍珠、椰果、葡萄干、花生、仙草+奶茶',price:20.00,type:'仙草系列'},
-            {did:6,img:'/naicha/nc7.jpg',title:'杨枝甘露烧仙草' ,desc:'甘甜芒果青涩西柚，经典杨枝甘露',price:21.00,type:'清凉一夏'}
-          ],
+      descs:[],
+      drinkList: [],
       spec_title:"",
       desc_desc:"",
       desc_type:"",
       spec_img:"",
-      spec_price:"",
+      spec_price:0,
       btn_index:0,
-      btn_count:this.$store.state.btn_count,
+      // btn_count:this.$store.state.btn_count[this.btn_index],
+      indicator:0,
     }
   },
   methods:{
     // 根据产品分类导航栏传参来过滤想要的数据
      change(e,i){
+       this.indicator=i;
        //实现点击分类导航栏，实现选中的页面的标题为对应的选中的导航栏的标题
       let cat=document.getElementsByClassName('cat')[0]
       if(e.target.nodeName=="IMG"){
@@ -104,17 +96,27 @@ export default {
            sear.style.background="#F5F5F5"
            lis[n].className="active"
          }
-       }
+       };
+         //单击左侧导航栏发送给ajax请求，通过不同的分类id请求到不同分类下的产品信息
+        // this.axios.get("/lists",{
+        //   params:{cid:i+1,page:1}
+        // }).then(res=>{
+        //   this.drinkList=res.data.result
+        //   for(let i=0;i<res.data.result.length;i++){
+        //      this.$store.state.btn_count.push(0)
+        //    }
+        // })
      },
       check(e,i){
+        
         //利用事件委托
         //根据v-for 的index下标来获取详情页面数据
         if(e.target.className=='desc-title' || e.target.className=='mint-button desc-button mint-button--default mint-button--small' || e.target.className=='desc-desc' || e.target.className=="spec_img"){
-          this.spec_img=this.drinkList[i].img
-          this.spec_title=this.drinkList[i].title
-          this.desc_desc=this.drinkList[i].desc
-          this.desc_type=this.drinkList[i].type
-          this.spec_price=this.drinkList[i].price.toFixed(2)
+          this.spec_img=this.drinkList[this.indicator][i].product_pic
+          this.spec_title=this.drinkList[this.indicator][i].product_name
+          this.desc_desc=this.drinkList[this.indicator][i].product_describe
+          this.desc_type=this.drinkList[this.indicator][i].product_labelname
+          this.spec_price=this.drinkList[this.indicator][i].product_price.toFixed(2)
           this.btn_index=i; 
           //点击查看详情的时候弹出详情层页面
           this.$store.commit("changeSpecShow",true)
@@ -123,11 +125,93 @@ export default {
      },
   },
   mounted(){
-    //后面此处需要发送ajax请求，首次初始化页面
-
+      //显示加载提示框
+       this.$indicator.open({
+        text:'加载中...',
+        spinnerType:'double-bounce'
+      });
+    //后面此处需要发送ajax请求，首次初始化页面左侧导航栏
+    this.axios.get("/category").then(res=>{
+      let data=res.data.results;
+      data.forEach(ele=>{
+        ele.class_pic=require(`../assets/img/${ele.class_pic}`)
+      })
+      this.descs=data
+    })
+    
+    //初始化情况下发送请求，默认显示第一个类别下的商品第一页的商品
+    this.axios.get("/lists"
+    ).then(res=>{
+      let drink=[]
+      let drink2=[]
+      let drink3=[]
+      let drink4=[]
+      let drink5=[]
+      let drink6=[]
+      let drink7=[]
+      // this.drinkList=res.data.result;
+      let arr=res.data.result;
+      // console.log(arr)
+      //  arr.forEach(ele=>{
+      //   ele.product_pic=require(`../assets/images/${ele.product_pic}`)
+      // })
+      // console.log(arr)
+      // console.log(res.data.result);
+      arr.forEach((ele,index,arr)=>{
+        if(ele.product_id==1){
+          ele.product_pic=require(`../assets/images/${ele.product_pic}`)
+          drink.push(ele)
+        }
+        if(ele.product_id==2){
+          ele.product_pic=require(`../assets/images/${ele.product_pic}`)
+           drink2.push(ele)
+          
+          //  this.drinkList={cat1:drink,cat2:drink2}
+        }
+        if(ele.product_id==3){
+          ele.product_pic=require(`../assets/images/${ele.product_pic}`)
+           drink3.push(ele)
+        }
+        if(ele.product_id==4){
+          ele.product_pic=require(`../assets/images/${ele.product_pic}`)
+           drink4.push(ele)
+        }
+        if(ele.product_id==5){
+          ele.product_pic=require(`../assets/images/${ele.product_pic}`)
+           drink5.push(ele)
+        }
+        if(ele.product_id==6){
+          ele.product_pic=require(`../assets/images/${ele.product_pic}`)
+           drink6.push(ele)
+        }
+        if(ele.product_id==7){
+          ele.product_pic=require(`../assets/images/${ele.product_pic}`)
+           drink7.push(ele)
+        }
+      })
+      this.drinkList.push(drink)
+      this.drinkList.push(drink2)
+      this.drinkList.push(drink3)
+      this.drinkList.push(drink4)
+      this.drinkList.push(drink5)
+      this.drinkList.push(drink6)
+      this.drinkList.push(drink7)
+      console.log(this.drinkList)
+    })
+    // console.log(this.drinkList)
     //初始化情况下，左侧导航栏默认选择第一个。使其初始话颜色高亮显示
-    let lis=document.getElementsByTagName('li');
-    lis[0].className="active";
+    // let lis=document.getElementsByTagName('li');
+    let liEle=document.getElementsByTagName("li")
+    window.setTimeout(()=>{
+      liEle[0].className="active"
+    
+    },500)
+    window.setTimeout(()=>{
+      //关闭加载提示框
+        this.$indicator.close();
+    },50)
+     
+    
   },
   computed:{
    
@@ -188,8 +272,8 @@ export default {
 }
 .ordermeal .font_small{
   color: #878787;
-  font-size: 13px;
-  font-weight: bold;
+  font-size: 12.5px;
+  font-weight: 500;
 }
 .ordermeal li{
   height: 67.5px;
@@ -227,7 +311,7 @@ export default {
 }
 .ordermeal .desc>img{
  width: 100px;
- height: 100px;
+ height: 80px;
  margin-right: 10px;
 }
 .ordermeal .cat{
@@ -242,7 +326,9 @@ export default {
 .ordermeal .desc-desc{
   font-size: 12px;
   color: #999;
-  
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .ordermeal .desc-button{
   background: #EAB488;
@@ -269,6 +355,7 @@ export default {
 
 .ordermeal .my_desc{
   position: relative;
+  overflow: hidden;
 }
 .ordermeal #sel_num{
   display:inline-block;
@@ -282,8 +369,9 @@ export default {
   font-size: 12px;
   line-height: 15px;
   position: absolute;
-  top: 68px;
+  top: 50px;
   left: 143px;
+
   /* display: none; */
 }
 </style>

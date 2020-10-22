@@ -4,7 +4,7 @@ const pool=mysql.createPool({
   port:3306,
   user:'root',
   password:"",
-  database:'sxc',//后期需要变化
+  database:'sysxc',//后期需要变化
   connectionLimit:10
 })
 

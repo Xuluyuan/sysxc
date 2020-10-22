@@ -5,7 +5,10 @@
         <mt-button icon="back"></mt-button>
       </router-link>
     </mt-header>
-    <mt-search v-model="value" class="value"></mt-search>
+  
+    <mt-search v-model="value" class="value" @blur.native.capture="searchData"></mt-search>
+
+
   </div>
 </template>
 <script>
@@ -15,6 +18,17 @@ export default {
       value:''
     }
   },
+  methods:{
+   searchData(){
+      this.axios.get("/like",{
+        params:{like:this.value}
+      }).then(res=>{
+        console.log(1)
+        console.log(res.data.result)
+      })
+    }
+  },
+
 }
 </script>
 <style scoped>

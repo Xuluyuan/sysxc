@@ -1,34 +1,34 @@
 <template>
   <div class="details" v-show="this.$store.state.specShow==true">
             <div class="spec"  >
-            <span @click="close">×</span>
-            <img :src=spec_img>
+            <span @click="close" >×</span>
+            <img :src=spec_img class="spec_img">
             <div class="my-spec">
               <p class="desc-title1">{{spec_title.title}}</p>
-              <p class="desc-desc1">{{desc_desc}}</p>
-              <p class="desc-type1">{{desc_type}}</p>
+              <p class="desc-desc1" style="margin-top:-15px">{{desc_desc}}</p>
+              <p class="desc-type1" v-show="desc_type!=''">{{desc_type}}</p>
               <div class="req">
-                <div class="temp" @click="choicTemp($event,btn_index)">
+                <div class="temp" @click="choicTemp($event,btn_index)" v-if="indicator !==6" v-show="indicator !==5">
                 <!-- <div class="temp"> -->
                   <p>温度</p>
                   <button>冰</button>
                   <button style="margin-left:15px;margin-bottom:10px">不能调整温度</button>
                 </div>
-                <div class="tian" @click="choicTian($event,btn_index)">
+                <div class="tian" @click="choicTian($event,btn_index)" v-if="indicator !==6" v-show="indicator !==5">
                 <!-- <div class="tian"> -->
-                  <p>甜度</p>
-                  <button>常规糖</button>
+                  <p >甜度</p>
+                  <button >常规糖</button>
                   <button style="margin-left:15px">少糖7分糖</button>
                 </div>
               </div>
-              <hr>
-              <div class="num">
+              <hr style="margin-top:10px;margin-bottom:10px">
+              <div class="num" v-if="indicator !==6">
                 <label>￥{{spec_price}}</label>
-                <cart-control :drink="drink" :index="index" :btn_index="btn_index" :drink-list="drinkList" ></cart-control>
+                <cart-control :drinks="drinks"  :drink="drink"  :btn_index="btn_index" :drink-list="drinkList" :indicator="indicator" ></cart-control>
               </div>
               <p class="hasSelected" id="p">{{temp}}</p>
               <label class="hasSelected" id="label">{{tian}}</label>
-              <div class="spec_bottom">
+              <div class="spec_bottom" v-if="indicator !==6">
                 <button @click="commit(btn_index)">选好了</button>
               </div>
             </div>
@@ -39,7 +39,7 @@
 import cartControl from "./Cartcontrol"
 export default {
   components:{cartControl},
-  props:["drinkList","index","check","spec_title", "desc_desc","desc_type","spec_img","spec_price","drink","selectdrinks" ,"btn_index"],
+  props:["drinks", "drinkList","index","check","spec_title", "desc_desc","desc_type","spec_img","spec_price","drink","selectdrinks" ,"btn_index","indicator"],
   data(){
     return{
       temp:"",
@@ -49,7 +49,7 @@ export default {
    methods:{
      //规格选择
      choicTemp(e,btn_index){
-       console.log(btn_index)
+      //  console.log(btn_index)
        if(e.target.nodeName=="BUTTON"){
         if(e.target.className==""){
            let selected=document.getElementById('p')
@@ -65,7 +65,6 @@ export default {
        }
      },
       choicTian(e,btn_index){
-       console.log(btn_index)
        if(e.target.nodeName=="BUTTON"){
         if(e.target.className==""){
           let selected=document.getElementById('label')
@@ -82,14 +81,19 @@ export default {
      },
      //点击详情页面的关闭按钮时,隐藏详情页面
      close(){
+      let selected1=document.getElementById('p')
+      let selected=document.getElementById('label')
       this.$store.commit("changeMask",false);
       this.$store.commit("changeSpecShow",false)
+      selected1.innerHTML=""
+      selected.innerHTML=""
      },
      //点击选好了按钮，完成如下功能
      commit(i){
       let btns=document.querySelectorAll('.temp button');
       let btn1s=document.querySelectorAll('.tian button');
       let arr=[...btns,...btn1s];
+      console.log(arr)
       //初始化变量，记录没有选择规格的按钮数量
       let c=0;
       arr.forEach((btn)=>{
@@ -99,7 +103,7 @@ export default {
         return c;
       });
       //总共有24个按钮
-      if(c>22){
+      if(c>56){
         this.$messagebox("温馨提示","请选择规格")
       }else{
           this.$store.commit("changeSpecShow",false)
@@ -113,6 +117,9 @@ export default {
 }
 </script>
 <style  scoped>
+.spec .spec_img{
+  width: 100%;
+}
 .spec{
   width: 320px;
   height: 500px;
@@ -130,11 +137,14 @@ export default {
   font-size: 30px;
   width: 40px;
   height: 40px;
-  border:1px solid #000 ;
+  border:1px solid rgb(179, 170, 170) ;
   text-align: center;
   margin-top:10px;
   margin-right: 10px;
   border-radius: 50%;
+  position: absolute;
+  right: 0px;
+  color: #999;
 }
 
 .my-spec{

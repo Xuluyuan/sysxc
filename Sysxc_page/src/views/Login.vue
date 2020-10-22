@@ -115,7 +115,7 @@ export default {
           console.log(res.data.info)
           if(res.data.code==200){
             //储存用户名
-            localStorage.setItem('username',res.data.info.username)
+            localStorage.setItem('username',res.data.info.user_name)
             //提交mutations
             this.$store.commit("logined",res.data.info)
             //必须要将数据存储到webStorge中，因为用户刷新后记录依旧要保持

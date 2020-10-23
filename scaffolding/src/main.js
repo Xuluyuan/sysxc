@@ -8,6 +8,7 @@ import qs from 'qs'
 import MintUi from 'mint-ui';
 // 导入样式文件
 import 'mint-ui/lib/style.min.css';
+import './assets/css/iconfont.css'
 // 注册为Vue的插件
 Vue.use(MintUi);
 axios.defaults.baseURL = 'http://127.0.0.1'

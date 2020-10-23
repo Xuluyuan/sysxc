@@ -17,7 +17,7 @@
                     </li>
                     <li>
                         <mt-cell title="取餐时间" is-link @click.native="way">
-                            <span class="mint-cell-value" >我已到店</span>
+                            <span class="mint-cell-value">我已到店</span>
                         </mt-cell>
                         <mt-popup
                             v-model="popupVisible"
@@ -44,18 +44,33 @@
                         <mt-cell title="商品明细"></mt-cell>
                     </li>
                     <li class="product">
-                        <mt-cell title="杨枝甘露酸奶" label="冰/常规糖">
-                            <div>
-                            <span class="count">x1</span>
-                            <span class="price">¥18</span>
+                        <div id="product_bool">
+                            <mt-cell title="杨枝甘露酸奶" label="冰/常规糖">
+                                <div>
+                                    <span class="count">x1</span>
+                                    <span class="price">¥18</span>
+                                </div>
+                            </mt-cell>
+                            <mt-cell title="草莓啵啵酸奶" label="冰/半糖">
+                                <div>
+                                    <span class="count">x1</span>
+                                    <span class="price">¥17</span>
+                                </div>
+                            </mt-cell>
+                            <mt-cell title="草莓啵啵酸奶" label="冰/半糖">
+                                <div>
+                                    <span class="count">x1</span>
+                                    <span class="price">¥17</span>
+                                </div>
+                            </mt-cell>
+                            <mt-cell title="草莓啵啵酸奶" label="冰/半糖">
+                                <div>
+                                    <span class="count">x1</span>
+                                    <span class="price">¥17</span>
+                                </div>
+                            </mt-cell>
                         </div>
-                        </mt-cell>
-                        <mt-cell title="草莓啵啵酸奶" label="冰/半糖">
-                            <div>
-                            <span class="count">x1</span>
-                            <span class="price">¥17</span>
-                        </div>
-                        </mt-cell>
+                        <div class="more iconfont"  @click="goMore($event)">展开更多&#xe733;</div>
                     </li>
                     <li>
                         <div class="coupon" @click= "coupon()">
@@ -78,13 +93,14 @@
                                 <div class="coupon_container">
                                     <div class="coupon_div">
                                         <mt-cell title="¥3" label="满20元可用">
-                                        <div class="coupon_explain">
-                                            <p class="minus">满20减3元优惠卷</p>
-                                            <p class="deadline">6天后到期</p>
-                                            <p class="coupon_name">互斥卷</p>
-                                        </div>
-                                        <mt-radio align="right" v-model="valueCoupon" :options="coupon_options"></mt-radio>
-                                    </mt-cell>
+                                            <div class="coupon_explain">
+                                                <p class="minus">满20减3元优惠卷</p>
+                                                <p class="deadline">6天后到期</p>
+                                                <p class="coupon_name">互斥卷</p>
+                                            </div>
+                                            <!-- <mt-radio align="right" name="sex" v-model="valueCoupon" :options="coupon_options"></mt-radio> -->
+                                            <input type="radio" name="coupon" value="-3" @click="radioed($event)">
+                                         </mt-cell>
                                     </div>
                                     
                                     <p class="p_hint">查看详情 ></p>
@@ -92,13 +108,15 @@
                                 </div>
                                 <div class="coupon_container">
                                     <div class="coupon_div">
-                                        <mt-cell title="9折" label="满20元可用">
+                                        <mt-cell title="9折">
                                         <div class="coupon_explain">
                                             <p class="minus">夏季新品九折卷</p>
                                             <p class="deadline">20天后到期</p>
                                             <p class="coupon_name">互斥卷</p>
                                         </div>
-                                        <mt-radio align="right" v-model="valueCoupon" :options="coupon_options"></mt-radio>
+                                        <!-- <mt-radio align="right" name="sex" v-model="valueCoupon" :options="coupon_options"></mt-radio> -->
+                                            <input type="radio" name="coupon" value="/9" @click="radioed($event)">
+
                                     </mt-cell>
                                     </div>
                                     
@@ -113,15 +131,15 @@
                         <mt-cell>
                             <div>
                                 <span class="sum">共2件商品, 小计: </span>
-                                <span class="total">¥32</span>
+                                <span class="total">¥35</span>
                             </div>
                         </mt-cell>
                     </li>
                 </ul>
                 <ul>
                     <li>
-                        <mt-cell title="使用积分" label="共0积分，每10积分可抵¥1">
-                            <mt-switch v-model="integralVal" disabled @click.native="integrals($event)"></mt-switch>
+                        <mt-cell title="使用积分" :label="`共${integral}积分，每10积分可抵¥1`">
+                            <mt-switch v-model="integralVal" :disabled="disableds" @click.native="integrals($event)"></mt-switch>
                             <img slot="icon" src="../assets/images/jifen.png" >
                         </mt-cell>
                     </li>
@@ -134,18 +152,29 @@
         <!-- 底部开始 -->
          <div class="my_footer">
              <span class="footer_price">¥35</span>
-             <button class="goPay">去支付</button>
+             <button class="goPay" @click="goPay()">去支付</button>
          </div>
+         <div class="footer_div">
+             <mt-popup v-model="pay_popup">
+                <div class="pay_container">
+                    <div class="pay_close" @click="shut">×</div>
+                    <div class="pay_img">
+                        <img src="../assets/images/ewm.png" alt="">
+                    </div>
+                    <p class="pay_text">请使用微信扫一扫完成支付</p>
+                </div>
+            </mt-popup>
+         </div>
+         
         <!-- 底部结束 -->
     </div>
 </template>
 
 <style>
     /* 头部导航开始 */
-    .settlement .mint-header {
+    .settlement .mint-header  {
         height: 60px;
         background-color: #fff;
-        z-index: 5;
     }
     .settlement .mint-header-title,
     .mintui-back:before {
@@ -236,8 +265,8 @@
    /* --------------------------- */
 
    /* 商品明细 */
-    .settlement .product .mint-cell:not(:last-child) {
-        margin-bottom: 20px;
+    .settlement .product .mint-cell:not(:first-child) {
+        margin-top: 20px;
     }
     .settlement .product .mint-cell-text {
         font-size: 15px;
@@ -330,7 +359,9 @@
     }
     /* 用餐方式弹窗结束 */
     /* #EAB488 */
-     .coupon_header .mint-header {
+
+    /* 优惠卷弹窗 */
+    .coupon_header .mint-header {
         height: 50px;
     }
     .coupon_header .mint-header-title {
@@ -363,7 +394,7 @@
         font-weight: 500;
         color: #EAB488;
     }
-     .coupon_container .coupon_div {
+    .coupon_container .coupon_div {
         border-bottom: 1px dashed #cbcbcb;
         margin-bottom: 10px;
         padding: 12px 0;
@@ -388,9 +419,47 @@
         color: #F32D09;
         background-color: #FEEAE6;
     }
+
+     /* 支付弹窗 */
+    .footer_div .mint-popup {
+        border-radius: 5px;
+    }
+    .pay_container  {
+        position: relative;
+        padding: 50px 20px;
+    }
+    .pay_close {
+        top: 5px;
+        right: 10px;
+        position: absolute;
+        font-size: 20px;
+    }
+    .pay_img  {
+        margin: 30px 40px;
+    }
+    .pay_img img {
+        width: 150px;
+    }
+    .pay_text {
+        text-align: center;
+        font-size: 16px;
+    }
+
+    /* -------优惠卷展开更多---------- */
+    .product_hidden {
+        height: 143px;
+        overflow: hidden;
+    }
+    .more {
+        font-size: 12px;
+        color: #5E5E5E;
+        text-align: center;
+        margin-top: 20px;
+    }
 </style>
 <script>
 import $ from '../comoon/js/jquery-1.11.3';
+import { Toast } from 'mint-ui';
 
 export default {
     data() {
@@ -404,7 +473,8 @@ export default {
                 value: 'shop'
             }],
             integralVal: false,
-            integral: 20,
+            // 积分
+            integral: 5,
             popupVisible: false,
             couponVisible: false,
             product: '',
@@ -415,10 +485,16 @@ export default {
                 } ],
             }],
             valueCoupon: '',
-            coupon_options : [{
-              label: ' ',
-                value: '-3'
-           }]
+            // 优惠卷
+            
+           // 开关按钮
+           disableds: false,
+           // 消息提示框
+           toastInstanse: '',
+           // 支付弹出框
+           pay_popup: false,
+           // 展开更多判断条件
+           bool:true
         }
     },
     methods: {
@@ -440,22 +516,76 @@ export default {
         // 积分
         integrals(event) {
             if(this.integral >= 10) {
-                event.target.disable = true;
+                // console.log(event)
+                let minus = parseInt(this.integral / 10);
+                // 总价减去minus，获取扣除积分后的差价
+                // 应该是支付完后再 重新计算积分
+                // this.integral -= minus * 10;
+            } else {
+                this.disableds = true;
+                if(!this.toastInstanse) {
+                    this.toastInstanse = Toast({
+                        message: "积分不足无法积分抵现",
+                        position: "middle",
+                        duration: 3000,
+                        className: 'toast_fontSzie'
+                    });  
+                } else {
+                    this.toastInstanse.close();
+                    setTimeout(() => {
+                        this.toastInstanse = null;
+                    },100) 
+                }
+            }         
+        },
+        // 支付弹窗
+        goPay() {
+            this.pay_popup = true;
+        },
+        shut() {
+            this.pay_popup = false;
+        },
+        // 展开更多
+        goMore(event) {
+            if(this.bool) {
+                event.target.innerHTML = `收起&#xe734;`;
+                $("#product_bool").removeClass('product_hidden');
+                this.bool = false;
+            } else {
+                event.target.innerHTML = `展开更多&#xe733;`;
+                $("#product_bool").addClass('product_hidden');
+                this.bool = true;
             }
+            
+
+        },
+        radioed(event) {
+            console.log(event.target.value)
         }
-    },
+  },
     watch: {
         valueChoose(val) {
             console.log(val)
         }
     },
-        created(){
-            // 设置单选框的样式，网上找到的
-            setTimeout(()=>{ 
-                $('.mint-radio-core').removeClass('mint-radio-core').addClass('mint-radio-core');
-                $('.mint-radio-input:checked + .mint-radio-core').removeClass('.mint-radio-input:checked + .mint-radio-core').addClass('.mint-radio-input:checked + .mint-radio-core')
-                
-            },10);
+    created(){
+        // 设置单选框的样式，网上找到的
+        setTimeout(()=>{ 
+            $('.mint-radio-core').removeClass('mint-radio-core').addClass('mint-radio-core');
+            $('.mint-radio-input:checked + .mint-radio-core').removeClass('.mint-radio-input:checked + .mint-radio-core').addClass('.mint-radio-input:checked + .mint-radio-core')
+            
+        },10);
+    },
+    mounted() {
+        // --------------- 展开更多--------------------- // 
+        var leng = $("#product_bool").children().length;
+        if(leng > 3) {
+            $(".more").css("display","block")
+            $("#product_bool").addClass('product_hidden')
+        } else if(leng<=3){
+            $(".more").css("display","none")
+            $("#product_bool").removeClass('product_hidden')
         }
+    }
 }
 </script>

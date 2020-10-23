@@ -58,6 +58,11 @@ a:focus, a:hover {
   .mint-header-title {
     margin-top: 14px; 
   }
+ .mintui-back:before {
+    font-size: 16px;
+    color: #fff !important;
+    font-weight: 700;
+}
 </style>
 <script>
 export default {
@@ -120,7 +125,16 @@ export default {
             this.$store.commit("logined",res.data.info)
             //必须要将数据存储到webStorge中，因为用户刷新后记录依旧要保持
             localStorage.setItem('isLogined',"1")
-            this.$router.push("/me")
+            this.$indicator.open({
+              text:'加载中...',
+              spinnerType:'double-bounce'
+            });
+            setTimeout(()=>{
+              this.$router.push("/me")
+                //关闭加载提示框
+              this.$indicator.close();
+            },1000)
+            
           }else{
             console.log(res.data.message)
             this.$messagebox("登录信息","用户名或密码错误")

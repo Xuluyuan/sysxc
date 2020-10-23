@@ -6,7 +6,6 @@
   </div>
 </template>
 <script>
-// import Vue from 'vue'
 export default {
   mounted(){
 
@@ -18,9 +17,6 @@ export default {
     drinkList:{
       type:Array
     },
-    drinks:{
-      type:Array
-    },
     indicator:{
       type:Number
     }
@@ -28,7 +24,7 @@ export default {
  methods:{
    
   minus(i1,i2){
-
+    console.log(this.indicator,this.btn_index)
     if(this.$store.state.btn_count[i1][i2]>0){
       this.$store.commit('dec',{
          n1:i1,
@@ -37,6 +33,7 @@ export default {
     }
   },
   add(i1,i2){
+    console.log(this.indicator,this.btn_index)
     this.$store.commit('inc',{
       n1:i1,
       n2:i2,

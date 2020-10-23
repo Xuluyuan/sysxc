@@ -23,7 +23,7 @@
     <!-- 右侧商品详情 -->
    <div class="right-desc">
      <div class="cat">新品上线</div>
-     <div v-for="(drink,index) of drinkList[indicator]" :key="index">
+     <div v-for="(drink,index) of this.$store.state.drinkList[indicator]" :key="index">
        <div class="desc" @click="check($event,index)">
           <!-- <img :src="`../../public/img/${drink.class_pic}`"  alt="" class="spec_img"> -->
            <img :src=drink.product_pic  alt="" class="spec_img">
@@ -36,7 +36,7 @@
             <span id="sel_num" class="sum" v-show="$store.state.btn_count[indicator][index]>0">{{$store.state.btn_count[indicator][index]}}</span>
             <!-- <span id="sel_num" class="sum"></span> -->
             <!-- 详情页 -->
-            <my-details :drinkList="drinkList" :index="index" :check="check" :spec_title="spec_title" :desc_desc="desc_desc" :desc_type="desc_type" :spec_img="spec_img" :spec_price=" spec_price" :drink="drink" :btn_index="btn_index" :indicator="indicator" ></my-details>
+            <my-details  :index="index" :check="check" :spec_title="spec_title" :desc_desc="desc_desc" :desc_type="desc_type" :spec_img="spec_img" :spec_price=" spec_price" :drink="drink" :btn_index="btn_index" :indicator="indicator" ></my-details>
         </div>
       </div>
       <div style="margin:10px 0 10px 0; height:30px">
@@ -46,7 +46,7 @@
     </div>
   </div>
   <!-- 购物车组件 -->
-  <my-cart :drinkList="drinkList" :indicator="indicator"></my-cart>
+  <my-cart  :indicator="indicator" :btn_index="btn_index"></my-cart>
   <!-- 底部选项卡 -->
   <my-bottom></my-bottom>
   <!-- 选规格页面 -->
@@ -63,7 +63,6 @@ export default {
   data(){
     return{
       descs:[],
-      drinkList: [],
       spec_title:"",
       desc_desc:"",
       desc_type:"",
@@ -97,26 +96,17 @@ export default {
            lis[n].className="active"
          }
        };
-         //单击左侧导航栏发送给ajax请求，通过不同的分类id请求到不同分类下的产品信息
-        // this.axios.get("/lists",{
-        //   params:{cid:i+1,page:1}
-        // }).then(res=>{
-        //   this.drinkList=res.data.result
-        //   for(let i=0;i<res.data.result.length;i++){
-        //      this.$store.state.btn_count.push(0)
-        //    }
-        // })
      },
       check(e,i){
         
         //利用事件委托
         //根据v-for 的index下标来获取详情页面数据
         if(e.target.className=='desc-title' || e.target.className=='mint-button desc-button mint-button--default mint-button--small' || e.target.className=='desc-desc' || e.target.className=="spec_img"){
-          this.spec_img=this.drinkList[this.indicator][i].product_pic
-          this.spec_title=this.drinkList[this.indicator][i].product_name
-          this.desc_desc=this.drinkList[this.indicator][i].product_describe
-          this.desc_type=this.drinkList[this.indicator][i].product_labelname
-          this.spec_price=this.drinkList[this.indicator][i].product_price.toFixed(2)
+          this.spec_img=this.$store.state.drinkList[this.indicator][i].product_pic
+          this.spec_title=this.$store.state.drinkList[this.indicator][i].product_name
+          this.desc_desc=this.$store.state.drinkList[this.indicator][i].product_describe
+          this.desc_type=this.$store.state.drinkList[this.indicator][i].product_labelname
+          this.spec_price=this.$store.state.drinkList[this.indicator][i].product_price.toFixed(2)
           this.btn_index=i; 
           //点击查看详情的时候弹出详情层页面
           this.$store.commit("changeSpecShow",true)
@@ -124,12 +114,8 @@ export default {
         }
      },
   },
+
   mounted(){
-      //显示加载提示框
-       this.$indicator.open({
-        text:'加载中...',
-        spinnerType:'double-bounce'
-      });
     //后面此处需要发送ajax请求，首次初始化页面左侧导航栏
     this.axios.get("/category").then(res=>{
       let data=res.data.results;
@@ -138,7 +124,7 @@ export default {
       })
       this.descs=data
     })
-    
+   
     //初始化情况下发送请求，默认显示第一个类别下的商品第一页的商品
     this.axios.get("/lists"
     ).then(res=>{
@@ -149,14 +135,7 @@ export default {
       let drink5=[]
       let drink6=[]
       let drink7=[]
-      // this.drinkList=res.data.result;
       let arr=res.data.result;
-      // console.log(arr)
-      //  arr.forEach(ele=>{
-      //   ele.product_pic=require(`../assets/images/${ele.product_pic}`)
-      // })
-      // console.log(arr)
-      // console.log(res.data.result);
       arr.forEach((ele,index,arr)=>{
         if(ele.product_id==1){
           ele.product_pic=require(`../assets/images/${ele.product_pic}`)
@@ -165,8 +144,6 @@ export default {
         if(ele.product_id==2){
           ele.product_pic=require(`../assets/images/${ele.product_pic}`)
            drink2.push(ele)
-          
-          //  this.drinkList={cat1:drink,cat2:drink2}
         }
         if(ele.product_id==3){
           ele.product_pic=require(`../assets/images/${ele.product_pic}`)
@@ -189,31 +166,24 @@ export default {
            drink7.push(ele)
         }
       })
-      this.drinkList.push(drink)
-      this.drinkList.push(drink2)
-      this.drinkList.push(drink3)
-      this.drinkList.push(drink4)
-      this.drinkList.push(drink5)
-      this.drinkList.push(drink6)
-      this.drinkList.push(drink7)
-      console.log(this.drinkList)
+      let obj={
+        drink:drink,
+        drink2:drink2,
+        drink3:drink3,
+        drink4:drink4,
+        drink5:drink5,
+        drink6:drink6,
+        drink7:drink7
+      }
+      // this.$store.commit("clearDrinkList")
+      this.$store.commit("getDrinkList",obj)
     })
-    // console.log(this.drinkList)
+
     //初始化情况下，左侧导航栏默认选择第一个。使其初始话颜色高亮显示
-    // let lis=document.getElementsByTagName('li');
     let liEle=document.getElementsByTagName("li")
     window.setTimeout(()=>{
       liEle[0].className="active"
-    
     },500)
-    window.setTimeout(()=>{
-      //关闭加载提示框
-        this.$indicator.close();
-    },50)
-     
-    
-  },
-  computed:{
    
   },
 }

@@ -1,53 +1,46 @@
 <template>
-<!-- <div class="foot" id="cart"> -->
 <div class="foot" id="cart" v-show="totalCount>0" >
-    
-    <div class="left_cart" @click="cartDetails(indicator)">
-        <img src="../assets/images/cart.png" alt="">
-        <span class="foot_sum">合计￥{{totalPrice}}元</span>
-        <p class="num">{{totalCount}}</p>
-        <span class="deliveryPrice">另需派送费:￥2元</span>
-    </div>
-    <button class="right_cart" @click="jumpPay">去结算</button>
-    <div class="cartList" v-show="this.$store.state.cartListShow==true">
-        <p class="cartList_top">
-            <span class="selected">已选中的商品</span>
-            <span class="clear" @click="clear">清空购物车</span>
-        </p>
-        <ul class="list_content"  >
-              <!-- <li class="drink" v-for="(drink,dindex) of drinks" :key="dindex"> -->
-            <li class="drink" v-for="(drink,dindex) of drinks" :key="dindex" >
-                <div v-for="(d,i) of drink" :key="i" class="list">
-                  <!-- <cart-control :drinks="drinks" :indicator="indicator" :btn_index="btn_index" :drinkList="drinkList"></cart-control> -->
-                  <cart-control :drink='drink' :btn_index='drink.index' :drinkList='drinkList' :indicator="indicator" :drinks="drinks"></cart-control>
-                    <span class="title">{{d.title}}</span>
-                    <span class="count">×{{d.count}}</span>
-                    <span class="price">￥{{d.price*d.count}}</span>
-                    <!-- <p class="details">{{drink.details}}</p> -->  
-                </div>
-            </li>
-        </ul>
-    </div>
+
+        <div class="left_cart" @click="cartDetails()">
+            <img src="../assets/images/cart.png" alt="">
+            <span class="foot_sum">合计￥{{totalPrice}}元</span>
+            <p class="num">{{totalCount}}</p>
+            <span class="deliveryPrice">另需派送费:￥2元</span>
+        </div>
+        <button class="right_cart" @click="jumpPay">去结算</button>
+        <div class="cartList" v-show="this.$store.state.cartListShow==true">
+            <p class="cartList_top">
+                <span class="selected">已选中的商品</span>
+                <span class="clear" @click="clear">清空购物车</span>
+            </p>
+            <ul class="list_content"  >
+                <li class="drink" v-for="(drink,dindex) of this.$store.state.btn_count" :key="dindex" >
+                    <div v-for="(d,i) of $store.state.drinkList[dindex]" :key="i" class="list" v-show="$store.state.btn_count[dindex][i]>0">
+                        <div class="listcartCount">
+                            <button @click="minus(dindex,i)"  class="minus">-</button>
+                            <label class="cart-count">{{$store.state.btn_count[dindex][i]}}</label>
+                            <button @click="add(dindex,i)" class="add">+</button>
+                        </div>
+                        <span class="title">{{d.product_name}}</span>
+                        <span class="count">×{{$store.state.btn_count[dindex][i]}}</span>
+                        <span class="price">￥{{d.product_price}}</span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
 </div>
 </template>
 <script>
 import cartControl from "./Cartcontrol"
+import { MessageBox } from 'mint-ui'
 export default {
     components:{cartControl},
     data(){
         return{
-           drinks:[],
-           drinks1:[],
-           drinks2:[],
-           drinks3:[],
-           drinks4:[],
-           drinks5:[],
-           drinks6:[],
-           drinks7:[],
-           drinks8:[]
         }
     },
-    props:['drinkList',"indicator","btn_index"],
+    props:["indicator","btn_index"],
     mounted(){
        console.log()
     },
@@ -63,7 +56,7 @@ export default {
                     }
                 })
             })
-            // console.log(totalCount)
+            localStorage.setItem("totalCount",totalCount)
             return totalCount
         },
         totalPrice(){
@@ -71,124 +64,72 @@ export default {
             this.$store.state.btn_count.forEach((counts,index)=>{
                 counts.forEach((count,index1)=>{
                     if(count>0){
-                        totalPrice+=count*this.drinkList[index][index1].product_price
+                        totalPrice+=count*this.$store.state.drinkList[index][index1].product_price
                     }
                 })
             })
-            // console.log(totalPrice)
+            localStorage.setItem("totalPrice",totalPrice)
             return totalPrice
-        }, 
+        },
+        
     },
     watch:{
+        //监视总价格的变化。当总价格等于0时，防护罩隐藏。
         totalPrice(){
-            if(this.totalPrice==0){
-                this.$store.commit("changeMask",false)
-            }
+            this.$nextTick(()=>{
+                if(this.totalPrice==0){
+                    this.$store.commit("changeMask",false)
+                 }
+            })
+            
         },
         
     },
     methods:{
-        jumpPay(){
-         
+        //购物车列表中的加减实现
+        minus(i1,i2){
+            console.log(this.indicator,this.btn_index)
+            if(this.$store.state.btn_count[i1][i2]>0){
+            this.$store.commit('dec',{
+                n1:i1,
+                n2:i2,
+            })
+            }
         },
-        cartDetails(indicator){
-            let lis=document.querySelectorAll(".drink")
-            // console.log(lis)
-            //将数量大于1的产品的数量、价格、标题、客户所选规格加入到data中的drinks数组中.
-            if(indicator==0){
-                let cartDrinkLists1=[];
-                this.$store.state.btn_count[indicator].forEach((count,index)=>{
-                if(count>0){
-                   let price=this.drinkList[indicator][index].product_price
-                   let title=this.drinkList[indicator][index].product_name
-                   cartDrinkLists1.push({count:count,price:price,title:title,index:index})
-                }
-                this.drinks1=cartDrinkLists1
-                return this.drinks1
+        add(i1,i2){
+            console.log(this.indicator,this.btn_index)
+            this.$store.commit('inc',{
+            n1:i1,
+            n2:i2,
+            })
+            
+        },
+        jumpPay(){
+            //跳转至支付页面
+            //先判断用户是否已经的登录，登录跳转至结算界面，没登陆提示用户登录
+            if(localStorage.getItem("isLogined")==1){
+                this.$router.push("/settlement")
+            }else{
+                 MessageBox.confirm("",{
+                    title:"提示",
+                    message:"请您登录后购买",
+                    confirmButtonText:"确定",
+                    cancelButtonText:"取消"
+                }).then(cation=>{
+                    if(cation=="confirm"){
+                       this.$store.commit("changeBarId","me")
+                       this.$router.push("/login")
+                    }
+                }).catch(error=>{
+                    if(error=="cancel"){
+                    }
                 })
-             }
-             else if(indicator==1){
-                  let cartDrinkLists2=[];
-                this.$store.state.btn_count[indicator].forEach((count,index)=>{
-                if(count>0){
-                   let price=this.drinkList[indicator][index].product_price
-                   let title=this.drinkList[indicator][index].product_name
-                   cartDrinkLists2.push({count:count,price:price,title:title,index:index})
-                }
-                this.drinks2=cartDrinkLists2
-                return this.drinks2
-                })
-             }else if(indicator==2){
-                  let cartDrinkLists3=[];
-                this.$store.state.btn_count[indicator].forEach((count,index)=>{
-                if(count>0){
-                   let price=this.drinkList[indicator][index].product_price
-                   let title=this.drinkList[indicator][index].product_name
-                   cartDrinkLists3.push({count:count,price:price,title:title,index:index})
-                }
-                this.drinks3=cartDrinkLists3
-                return this.drinks3
-                })
-             }else if(indicator==3){
-                  let cartDrinkLists4=[];
-                this.$store.state.btn_count[indicator].forEach((count,index)=>{
-                if(count>0){
-                   let price=this.drinkList[indicator][index].product_price
-                   let title=this.drinkList[indicator][index].product_name
-                   cartDrinkLists4.push({count:count,price:price,title:title,index:index})
-                }
-               this.drinks4=cartDrinkLists4
-                return this.drinks4
-                })
-             }else if(indicator==4){
-                  let cartDrinkLists5=[];
-                this.$store.state.btn_count[indicator].forEach((count,index)=>{
-                if(count>0){
-                   let price=this.drinkList[indicator][index].product_price
-                   let title=this.drinkList[indicator][index].product_name
-                   cartDrinkLists5.push({count:count,price:price,title:title,index:index})
-                }
-                this.drinks5=cartDrinkLists5
-                return this.drinks5
-                })
-             }else if(indicator==5){
-                  let cartDrinkLists6=[];
-                this.$store.state.btn_count[indicator].forEach((count,index)=>{
-                if(count>0){
-                   let price=this.drinkList[indicator][index].product_price
-                   let title=this.drinkList[indicator][index].product_name
-                   cartDrinkLists6.push({count:count,price:price,title:title,index:index})
-                }
-               this.drinks6=cartDrinkLists6
-                return this.drinks6
-                })
-             }else if(indicator==6){
-                  let cartDrinkLists7=[];
-                this.$store.state.btn_count[indicator].forEach((count,index)=>{
-                if(count>0){
-                   let price=this.drinkList[indicator][index].product_price
-                   let title=this.drinkList[indicator][index].product_name
-                   cartDrinkLists7.push({count:count,price:price,title:title,index:index})
-                }
-                this.drinks7=cartDrinkLists7
-                return this.drinks7
-                })
-             }else if(indicator==7){
-                  let cartDrinkLists8=[];
-                this.$store.state.btn_count[indicator].forEach((count,index)=>{
-                if(count>0){
-                   let price=this.drinkList[indicator][index].product_price
-                   let title=this.drinkList[indicator][index].product_name
-                   cartDrinkLists8.push({count:count,price:price,title:title,index:index})
-                }
-                this.drinks8=cartDrinkLists8
-                return this.drinks8
-                })
-             }
-            this.drinks=[this.drinks1,this.drinks2,this.drinks3,this.drinks4,this.drinks5,this.drinks6,this.drinks7,this.drinks8]
-            // console.log(this.drinks)
+            }
+            
+        },
+        cartDetails(){
             //获取防护层div和购物车列表div
-            if(this.$store.state.mask==false && this.$store.state.cartListShow==false && this.drinks.length>0){
+            if(this.$store.state.mask==false && this.$store.state.cartListShow==false){
                 this.$store.commit("changeCartList",true)
                 this.$store.commit("changeMask",true)
             }else{
@@ -196,6 +137,7 @@ export default {
                 this.$store.commit("changeMask",false)
             }
         },
+        //清除购物车
         clear(){
         this.$store.commit("clearList")
         }
@@ -319,4 +261,28 @@ export default {
         border-bottom: 1px solid#F0F0F0;
         margin-bottom: 3px;
     }
+/* ------- */
+.listcartCount label{
+   margin:0 10px 0 10px ;
+ }
+ .listcartCount .minus{
+  border: 1px solid #ccc;
+}
+.listcartCount .add{
+  border:none;
+  background-color: #EAB488;
+  color: #fff;
+}
+.listcartCount .add:focus,.minus:focus{
+  border: 0 none;
+  outline: none;
+}
+.listcartCount button{
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+}
+.listcartCount{
+  float: right;
+}
 </style>

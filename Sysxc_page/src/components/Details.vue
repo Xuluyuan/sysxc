@@ -49,7 +49,6 @@ export default {
    methods:{
      //规格选择
      choicTemp(e,btn_index){
-      //  console.log(btn_index)
        if(e.target.nodeName=="BUTTON"){
         if(e.target.className==""){
            let selected=document.getElementById('p')
@@ -119,6 +118,7 @@ export default {
 <style  scoped>
 .spec .spec_img{
   width: 100%;
+  height: 160px;
 }
 .spec{
   width: 320px;

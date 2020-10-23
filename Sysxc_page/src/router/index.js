@@ -10,20 +10,19 @@ import Reg from '../views/Reg.vue'
 import Me from '../views/Me.vue'
 import Address from '../views/Address.vue'
 import Newaddress from '../views/Newaddress.vue'
-import AAA from '../views/111.vue'
 //zhujianyang
-
+import Settlement from '../views/Settlement.vue'
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/ordermeal',
-    component: Ordermeal
+    component: Ordermeal,
+    meta: {
+      keepAlive: true // 需要缓存
+      }
   },
-  {
-    path: '/aaa',
-    component: AAA
-  },
+
   {
     path: '/login',
     component: Login
@@ -34,21 +33,21 @@ const routes = [
   },
   {
     path: '/',
-    component: Home
+    component: Home,
   },
   {
     path: '/takemeal',
-    component: Takemeal
+    component: Takemeal,
   },
   {
     path: '/me',
-    component: Me
+    component: Me,
   },
   {
     path: '/search',
-    component:Search
+    component:Search,
   },
-  //yanxiong
+  //yangjianxiong
   {
     path:'/newaddress',
     component:Newaddress
@@ -57,7 +56,11 @@ const routes = [
     path:'/address',
     component:Address
   },
-
+  //zhujianyang
+  {
+    path:'/settlement',
+    component:Settlement,
+  },
   // {
   //   path: '/about',
   //   name: 'About',

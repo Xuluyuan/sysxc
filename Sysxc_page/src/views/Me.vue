@@ -1,17 +1,6 @@
 <template>
     <div class="me">
-        <!-- 顶部 -->
-        <!-- <div >
-            <mt-header fixed id="ding">
-            <div slot="right" >
-                <router-link to="/login">登录</router-link>
-                <router-link to="/reg">注册</router-link>
-            </div>
-            </mt-header>
-        </div> -->
 
-
-        <!-- 选项卡 -->
         <div id="xuangka">
             <mt-navbar >
                 <mt-tab-item>
@@ -24,7 +13,7 @@
                                 <router-link to="/reg">注册</router-link>
                             </span>
                             <span v-else>
-                                <router-link to="/me">{{this.$store.state.user_name}}</router-link>
+                                <router-link to="/me">{{this.$store.state.username}}</router-link>
                                 <label >/</label>
                                 <button id="my-button" @click="quit">退出</button>
                             </span>
@@ -172,14 +161,26 @@
 </template>
 <script>
 import myBottom from '../components/Bottom'
+import { MessageBox } from 'mint-ui'
 export default {
   components:{myBottom},
   methods:{
     quit(){
-          let con=window.confirm('确认退出吗？')
-          if(con){
-              this.$store.commit('quit')
-          }
+         MessageBox.confirm("",{
+             title:"提示",
+             message:"确认退出吗",
+             confirmButtonText:"确定",
+             cancelButtonText:"取消"
+         }).then(cation=>{
+             if(cation=="confirm"){
+                 this.$store.commit('quit')
+                  MessageBox("提示","退出成功")
+             }
+         }).catch(error=>{
+             if(error=="cancel"){
+                 MessageBox("提示","取消")
+             }
+         })
         }
     }
 }

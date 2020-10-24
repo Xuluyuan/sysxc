@@ -8,13 +8,13 @@
               <p class="desc-desc1" style="margin-top:-15px">{{desc_desc}}</p>
               <p class="desc-type1" v-show="desc_type!=''">{{desc_type}}</p>
               <div class="req">
-                <div class="temp" @click="choicTemp($event,btn_index)" v-if="indicator !==6" v-show="indicator !==5">
+                <div class="temp" @click="choicTemp($event,btn_index)" v-if="this.$store.state.indicator !==6" v-show="this.$store.state.indicator !==5">
                 <!-- <div class="temp"> -->
                   <p>温度</p>
                   <button>冰</button>
                   <button style="margin-left:15px;margin-bottom:10px">不能调整温度</button>
                 </div>
-                <div class="tian" @click="choicTian($event,btn_index)" v-if="indicator !==6" v-show="indicator !==5">
+                <div class="tian" @click="choicTian($event,btn_index)" v-if="this.$store.state.indicator !==6" v-show="this.$store.state.indicator !==5">
                 <!-- <div class="tian"> -->
                   <p >甜度</p>
                   <button >常规糖</button>
@@ -22,13 +22,13 @@
                 </div>
               </div>
               <hr style="margin-top:10px;margin-bottom:10px">
-              <div class="num" v-if="indicator !==6">
+              <div class="num" v-if="this.$store.state.indicator !==6">
                 <label>￥{{spec_price}}</label>
-                <cart-control :drinks="drinks"  :drink="drink"  :btn_index="btn_index" :drink-list="drinkList" :indicator="indicator" ></cart-control>
+                <cart-control :drinks="drinks"  :drink="drink"  :btn_index="btn_index" :drink-list="drinkList"  ></cart-control>
               </div>
               <p class="hasSelected" id="p">{{temp}}</p>
               <label class="hasSelected" id="label">{{tian}}</label>
-              <div class="spec_bottom" v-if="indicator !==6">
+              <div class="spec_bottom" v-if="this.$store.state.indicator !==6">
                 <button @click="commit(btn_index)">选好了</button>
               </div>
             </div>
@@ -39,7 +39,7 @@
 import cartControl from "./Cartcontrol"
 export default {
   components:{cartControl},
-  props:["drinks", "drinkList","index","check","spec_title", "desc_desc","desc_type","spec_img","spec_price","drink","selectdrinks" ,"btn_index","indicator"],
+  props:["drinks", "drinkList","index","check","spec_title", "desc_desc","desc_type","spec_img","spec_price","drink","selectdrinks" ,"btn_index"],
   data(){
     return{
       temp:"",

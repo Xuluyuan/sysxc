@@ -23,7 +23,7 @@
     <!-- 右侧商品详情 -->
    <div class="right-desc">
      <div class="cat">新品上线</div>
-     <div v-for="(drink,index) of this.$store.state.drinkList[indicator]" :key="index">
+     <div v-for="(drink,index) of $store.state.drinkList[$store.state.indicator]" :key="index">
        <div class="desc" @click="check($event,index)">
           <!-- <img :src="`../../public/img/${drink.class_pic}`"  alt="" class="spec_img"> -->
            <img :src=drink.product_pic  alt="" class="spec_img">
@@ -31,12 +31,12 @@
             <p class="desc-title">{{drink.product_name}}</p>
             <p class="desc-desc">{{drink.product_describe}}</p>
             <span class="dec-price">￥{{drink.product_price.toFixed(2)}}</span>
-            <mt-button size="small" class="desc-button" v-if="indicator !==6" >选口味</mt-button>
+            <mt-button size="small" class="desc-button" v-if="$store.state.indicator !==6" >选口味</mt-button>
             <!-- 选口味上面的数量 -->
-            <span id="sel_num" class="sum" v-show="$store.state.btn_count[indicator][index]>0">{{$store.state.btn_count[indicator][index]}}</span>
+            <span id="sel_num" class="sum" v-show="$store.state.btn_count[$store.state.indicator][index]>0">{{$store.state.btn_count[$store.state.indicator][index]}}</span>
             <!-- <span id="sel_num" class="sum"></span> -->
             <!-- 详情页 -->
-            <my-details  :index="index" :check="check" :spec_title="spec_title" :desc_desc="desc_desc" :desc_type="desc_type" :spec_img="spec_img" :spec_price=" spec_price" :drink="drink" :btn_index="btn_index" :indicator="indicator" ></my-details>
+            <my-details  :index="index" :check="check" :spec_title="spec_title" :desc_desc="desc_desc" :desc_type="desc_type" :spec_img="spec_img" :spec_price=" spec_price" :drink="drink" :btn_index="btn_index" ></my-details>
         </div>
       </div>
       <div style="margin:10px 0 10px 0; height:30px">
@@ -46,11 +46,11 @@
     </div>
   </div>
   <!-- 购物车组件 -->
-  <my-cart  :indicator="indicator" :btn_index="btn_index"></my-cart>
+  <my-cart :btn_index="btn_index"></my-cart>
   <!-- 底部选项卡 -->
   <my-bottom></my-bottom>
   <!-- 选规格页面 -->
-  <div class="mask" v-show="this.$store.state.mask==true"></div>
+  <div class="mask" v-show="$store.state.mask==true"></div>
 </div>
 </template>
 <script>
@@ -70,13 +70,13 @@ export default {
       spec_price:0,
       btn_index:0,
       // btn_count:this.$store.state.btn_count[this.btn_index],
-      indicator:0,
+      getCount:[]
     }
   },
   methods:{
     // 根据产品分类导航栏传参来过滤想要的数据
      change(e,i){
-       this.indicator=i;
+        this.$store.commit("changeSideId",i)
        //实现点击分类导航栏，实现选中的页面的标题为对应的选中的导航栏的标题
       let cat=document.getElementsByClassName('cat')[0]
       if(e.target.nodeName=="IMG"){
@@ -98,15 +98,14 @@ export default {
        };
      },
       check(e,i){
-        
         //利用事件委托
         //根据v-for 的index下标来获取详情页面数据
         if(e.target.className=='desc-title' || e.target.className=='mint-button desc-button mint-button--default mint-button--small' || e.target.className=='desc-desc' || e.target.className=="spec_img"){
-          this.spec_img=this.$store.state.drinkList[this.indicator][i].product_pic
-          this.spec_title=this.$store.state.drinkList[this.indicator][i].product_name
-          this.desc_desc=this.$store.state.drinkList[this.indicator][i].product_describe
-          this.desc_type=this.$store.state.drinkList[this.indicator][i].product_labelname
-          this.spec_price=this.$store.state.drinkList[this.indicator][i].product_price.toFixed(2)
+          this.spec_img=this.$store.state.drinkList[this.$store.state.indicator][i].product_pic
+          this.spec_title=this.$store.state.drinkList[this.$store.state.indicator][i].product_name
+          this.desc_desc=this.$store.state.drinkList[this.$store.state.indicator][i].product_describe
+          this.desc_type=this.$store.state.drinkList[this.$store.state.indicator][i].product_labelname
+          this.spec_price=this.$store.state.drinkList[this.$store.state.indicator][i].product_price.toFixed(2)
           this.btn_index=i; 
           //点击查看详情的时候弹出详情层页面
           this.$store.commit("changeSpecShow",true)
@@ -116,7 +115,7 @@ export default {
   },
 
   mounted(){
-    //后面此处需要发送ajax请求，首次初始化页面左侧导航栏
+    //此处需要发送ajax请求，首次初始化页面左侧导航栏
     this.axios.get("/category").then(res=>{
       let data=res.data.results;
       data.forEach(ele=>{
@@ -175,7 +174,11 @@ export default {
         drink6:drink6,
         drink7:drink7
       }
-      // this.$store.commit("clearDrinkList")
+
+      // if( this.$store.state.drinkList.length!=0){
+      //    this.$store.commit("clearDrinkList")
+      // }
+     
       this.$store.commit("getDrinkList",obj)
     })
 

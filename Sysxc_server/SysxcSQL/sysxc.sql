@@ -39,9 +39,7 @@ CREATE TABLE suser_address(
     a_sex tinyint(2) not null comment '性别',
     a_tellphone char(11) not null comment '手机号',
     address varchar(128) not null comment '地址',
-    address_doorid varchar(32) not null comment '门牌号',
-    address_id int  not null comment '所属用户id', 
-    FOREIGN KEY(address_id) REFERENCES suser(uid) 
+    address_doorid varchar(32) not null comment '门牌号'
 );
 
 #创建商品类别表sproduct_class
@@ -77,15 +75,13 @@ CREATE TABLE sorder(
 
 #创建订单详情表sorder_details
 CREATE TABLE sorder_details(
-    order_id int not null comment '订单编号',
+    order_id int primary key auto_increment comment '订单编号',
     order_product_id int not null comment '商品编号',
     order_product_name varchar(128) not null comment '商品名称',
     order_product_total decimal(9,2) not null comment '商品总金额',
     order_product_count int not null comment '商品数量',
-    order_product_pic varchar(128) comment '商品图片',
-    order_user_address varchar(128) not null comment '用户地址',
-    FOREIGN KEY(order_id) REFERENCES sorder(oid),
-    FOREIGN KEY(order_product_id) REFERENCES sproduct_details(pid)
+    order_product_pic varchar(128) comment '商品图片'
+    
 );
 
 

@@ -16,8 +16,8 @@
     </div> -->
     <!-- 搜索结果页面 -->
     <!--  -->
-    <div class="searchList" >
-      <div class="resultList" v-for="(list,index) of searchList" :key="index" v-show="searchList.length>0" @click="myChoice(index)">
+    <div class="searchList" v-show="searchList.length>0" >
+      <div class="resultList" v-for="(list,index) of searchList" :key="index"  @click="myChoice(index)">
          <img :src=list.product_pic  class="img">
          <div class="listDesc">
            <p class="title">{{list.product_name}}</p>
@@ -93,7 +93,7 @@ export default {
   margin-left: 10px;
 }
 .resultList .desc{
-   /* overflow: hidden; */
+   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 12px;
@@ -128,9 +128,9 @@ height: 50px;
   position: relative;
 }
 .search .failImg{
-  width: 200px;
-  height: 200px;
-  margin-left: 80px;
+  width: 150px;
+  height: 150px;
+  margin-left: 120px;
   margin-top: 100px;
 }
 .search .failText{

@@ -101,7 +101,7 @@ app.get('/like',(req,res)=>{
 // 插入订单接口
 app.post('/add',(req,res)=>{
   let obj=req.body
-  let sql='insert into sorder set ? '
+  let sql='insert into sorder_details set ? '
   pool.query(sql,[obj],(err,result)=>{
     if(err) throw err;
     if(result.affectedRows>0){
@@ -115,14 +115,15 @@ app.post('/add',(req,res)=>{
 // 查询订单接口
 app.get('/getOrder',(req,res)=>{
   var pid=req.query.pid;
-  pool.query("select * from sorder where order_id=?",[pid],(err,result)=>{
+  pool.query("select * from sorder_details where order_product_id=?",[pid],(err,result)=>{
     if(err) throw err;
-    res.send(result)
+    console.log(result)
+    res.send({result:result})
   })
 })
 
  //添加用户地址接口
- app.post('/address',(req,res)=>{
+ app.post('/aaddress',(req,res)=>{
   let obj=req.body
   let sql='insert into suser_address set ? '
   pool.query(sql,[obj],(err,result)=>{
@@ -135,11 +136,11 @@ app.get('/getOrder',(req,res)=>{
    })
  })
  //查看用户地址接口
- app.get('/getAddress',(req,res)=>{
-  var did=req.query.did;
-  pool.query("select a_name,address,a_tellphone from suser_address where aid=?",[did],(err,result)=>{
-    if(err) throw err;
-    res.send(result)
-    console.log(result)
+  app.get('/getAddress',(req,res)=>{
+    var did=req.query.did;
+      pool.query("select a_name,address,a_tellphone,address_doorid from suser_address",(err,result)=>{
+      if(err) throw err;
+      res.send(result)
+      console.log(result)
+    })
   })
-})

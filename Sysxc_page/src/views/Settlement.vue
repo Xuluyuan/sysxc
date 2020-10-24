@@ -1,10 +1,10 @@
 <template>
-    <div class="settlement">
+    <div class="settlement" id="settlement">
         <!-- 头部导航开始 -->
         <mt-header title="订单结算" fixed>
-            <button slot="left" @click="back" class="back">返回</button>
-            <!-- <router-link to="/ordermeal" slot="left"> -->
+           <button slot="left" @click="back" class="back">返回</button>
                 <mt-button icon="back"></mt-button>
+         
         </mt-header>
         <!-- 头部导航结束 -->
 
@@ -17,7 +17,7 @@
                     </li>
                     <li>
                         <mt-cell title="取餐时间" is-link @click.native="way">
-                            <span class="mint-cell-value" >我已到店</span>
+                            <span class="mint-cell-value">我已到店</span>
                         </mt-cell>
                         <mt-popup
                             v-model="popupVisible"
@@ -43,20 +43,19 @@
                     <li>
                         <mt-cell title="商品明细"></mt-cell>
                     </li>
-                    <li class="product">
-                        <mt-cell title="杨枝甘露酸奶" label="冰/常规糖">
-                            <div>
-                            <span class="count">x1</span>
-                            <span class="price">¥18</span>
-                        </div>
-                        </mt-cell>
-                        <mt-cell title="草莓啵啵酸奶" label="冰/半糖">
-                            <div>
-                            <span class="count">x1</span>
-                            <span class="price">¥17</span>
-                        </div>
-                        </mt-cell>
-                    </li>
+                    <div class="all_product">
+                        <li class="product"  v-for="(purchased,pindex) of this.$store.state.btn_count" :key="pindex" >
+                            <div class="product_bool" v-if='getCount(pindex)!=0'>
+                                <div  v-for="(p,i) of $store.state.drinkList[pindex]" :key='i'>
+                                <mt-cell :title=p.product_name label="冰/常规糖" v-if="$store.state.btn_count[pindex][i]!=0">
+                                    <span class="count">x{{$store.state.btn_count[pindex][i]}}</span>
+                                    <span class="price">¥{{p.product_price}}</span>
+                                </mt-cell>
+                                </div>
+                            </div>
+                        </li>
+                    </div>
+                     <div class="more iconfont"  @click="goMore($event)">展开更多&#xe733;</div>
                     <li>
                         <div class="coupon" @click= "coupon()">
                             <mt-cell title="优惠卷" is-link >
@@ -78,13 +77,13 @@
                                 <div class="coupon_container">
                                     <div class="coupon_div">
                                         <mt-cell title="¥3" label="满20元可用">
-                                        <div class="coupon_explain">
-                                            <p class="minus">满20减3元优惠卷</p>
-                                            <p class="deadline">6天后到期</p>
-                                            <p class="coupon_name">互斥卷</p>
-                                        </div>
-                                        <mt-radio align="right" v-model="valueCoupon" :options="coupon_options"></mt-radio>
-                                    </mt-cell>
+                                            <div class="coupon_explain">
+                                                <p class="minus">满20减3元优惠卷</p>
+                                                <p class="deadline">6天后到期</p>
+                                                <p class="coupon_name">互斥卷</p>
+                                            </div>
+                                            <mt-radio align="right" name="sex" v-model="valueCoupon" :options="coupon_options"></mt-radio>
+                                         </mt-cell>
                                     </div>
                                     
                                     <p class="p_hint">查看详情 ></p>
@@ -98,7 +97,7 @@
                                             <p class="deadline">20天后到期</p>
                                             <p class="coupon_name">互斥卷</p>
                                         </div>
-                                        <mt-radio align="right" v-model="valueCoupon" :options="coupon_options"></mt-radio>
+                                        <mt-radio align="right" name="sex" v-model="valueCoupon" :options="coupon_options"></mt-radio>
                                     </mt-cell>
                                     </div>
                                     
@@ -112,8 +111,9 @@
                     <li>
                         <mt-cell>
                             <div>
-                                <span class="sum">共2件商品, 小计: </span>
-                                <span class="total">¥32</span>
+                                <span class="sum">共{{this.$store.getters.totalCount}}件商品, 小计: </span>
+                                <span class="total">¥{{(this.$store.getters.totalPrice+2).toFixed(2)}}</span>
+                                <p style="margin:0;font-size:12px;color:#F5A623">包含2元打包送费</p>
                             </div>
                         </mt-cell>
                     </li>
@@ -133,16 +133,40 @@
 
         <!-- 底部开始 -->
          <div class="my_footer">
-             <span class="footer_price">¥35</span>
-             <button class="goPay">去支付</button>
+             <span class="footer_price">¥{{(this.$store.getters.totalPrice+2).toFixed(2)}}</span>
+             <button class="goPay" @click="goPay()">去支付</button>
          </div>
+         <div class="footer_div">
+             <mt-popup v-model="pay_popup">
+                <div class="pay_container">
+                    <div class="pay_close" @click="shut">×</div>
+                    <div class="pay_img">
+                        <img src="../assets/images/ewm.png" alt="" @click="complate">
+                    </div>
+                    <p class="pay_text">请使用微信扫一扫完成支付</p>
+                </div>
+            </mt-popup>
+         </div>
+         
         <!-- 底部结束 -->
     </div>
 </template>
 
-<style>
+<style >
+ a:focus, a:hover {
+    text-decoration: none !important;
+}
+ a{
+  text-decoration:none !important; 
+}
+    .settlement a {
+        text-decoration: none;
+    }
+    .settlement p {
+        margin: 0;
+    }
     /* 头部导航开始 */
-    .settlement .back{
+     .settlement .back{
         border: 0 none;
         background: none;
         color: #000;
@@ -150,10 +174,9 @@
     .settlement ul li{
         list-style: none;
     }
-    .settlement .mint-header {
+    .settlement .mint-header  {
         height: 60px;
         background-color: #fff;
-        z-index: 5;
     }
     .settlement .mint-header-title,
     .mintui-back:before {
@@ -244,8 +267,12 @@
    /* --------------------------- */
 
    /* 商品明细 */
-    .settlement .product .mint-cell:not(:last-child) {
-        margin-bottom: 20px;
+     .settlement .product .mint-cell:not(:first-child) {
+        margin-top: 18px;
+    }
+    .settlement li.product{
+        padding: 0;
+        border: 0;
     }
     .settlement .product .mint-cell-text {
         font-size: 15px;
@@ -338,7 +365,9 @@
     }
     /* 用餐方式弹窗结束 */
     /* #EAB488 */
-     .coupon_header .mint-header {
+
+    /* 优惠卷弹窗 */
+    .coupon_header .mint-header {
         height: 50px;
     }
     .coupon_header .mint-header-title {
@@ -371,7 +400,7 @@
         font-weight: 500;
         color: #EAB488;
     }
-     .coupon_container .coupon_div {
+    .coupon_container .coupon_div {
         border-bottom: 1px dashed #cbcbcb;
         margin-bottom: 10px;
         padding: 12px 0;
@@ -396,13 +425,54 @@
         color: #F32D09;
         background-color: #FEEAE6;
     }
+
+     /* 支付弹窗 */
+    .footer_div .mint-popup {
+        border-radius: 5px;
+    }
+    .pay_container  {
+        position: relative;
+        padding: 50px 20px;
+    }
+    .pay_close {
+        top: 5px;
+        right: 10px;
+        position: absolute;
+        font-size: 20px;
+    }
+    .pay_img  {
+        margin: 30px 40px;
+    }
+    .pay_img img {
+        width: 150px;
+    }
+    .pay_text {
+        text-align: center;
+        font-size: 16px;
+    }
+
+    /* -------优惠卷展开更多---------- */
+    .product_hidden {
+        max-height: 143px;
+        overflow: hidden;
+    }
+    .more {
+        font-size: 12px;
+        color: #5E5E5E;
+        text-align: center;
+        margin-top: 20px;
+    }
+    
     
 </style>
 <script>
 import $ from '../comoon/js/jquery-1.11.3';
 import { Toast } from 'mint-ui';
-
+import { MessageBox } from 'mint-ui';
 export default {
+    computed: {
+       
+    },
     data() {
         return {
             valueChoose: 'pack',
@@ -429,15 +499,28 @@ export default {
             // 优惠卷
             coupon_options : [{
               label: ' ',
-                value: '-3'
+              value: '-3'
            }],
            // 开关按钮
            disableds: false,
-           // 弹出框
-           toastInstanse: ''
+           // 消息提示框
+           toastInstanse: '',
+           // 支付弹出框
+           pay_popup: false,
+           // 展开更多判断条件
+           bool:true
         }
     },
     methods: {
+         getCount(index){
+            
+                let sum = 0;
+                for(let i in this.$store.state.btn_count[index]){
+                    sum+=this.$store.state.btn_count[index][i]
+                }
+                return sum;
+            
+        },
         back(){
             localStorage.getItem("totalCount")
             localStorage.getItem("totalPrice")
@@ -481,22 +564,99 @@ export default {
                         this.toastInstanse = null;
                     },100) 
                 }
-                     
+            }         
+        },
+        // 支付弹窗
+        goPay() {
+            this.pay_popup = true;
+        },
+        shut() {
+            this.pay_popup = false;
+        },
+        // 展开更多
+        goMore(event) {
+           if(this.bool) {
+                event.target.innerHTML = `收起&#xe734;`;
+                $(".all_product").removeClass('product_hidden');
+                this.bool = false;
+            } else {
+                event.target.innerHTML = `展开更多&#xe733;`;
+                $(".all_product").addClass('product_hidden');
+                this.bool = true;
+            }
+            
+
+        },
+        complate(){
+            this.$store.state.btn_count.forEach((counts,index1)=> {
+                 this.$store.state.drinkList[index1].forEach((drink,index2)=>{
+                     if(this.$store.state.btn_count[index1][index2]>0){
+                         console.log(drink)
+                         console.log(this.$store.state.btn_count[index1][index2])
+                         let count=this.$store.state.btn_count[index1][index2]
+                         let price=drink.product_price;
+                         let total=count*price;
+                         let id=drink.product_id
+                         let img=drink.product_pic.slice(5)
+                         this.$store.commit("setMa",Math.round(new Date().getTime()/1000))
+                         let orderId=this.$store.state.orderId
+                          console.log(count,price,total)
+                         this.axios.post("/add",`order_product_name=${drink.product_name}&order_product_total=${total}&order_product_count=${count}&order_product_id=${orderId}&order_product_pic=${img}`).then(res=>{
+                             console.log(res.data.code)
+                             if(res.data.code==200){
+                                MessageBox.confirm('',{
+                                title: '支付成功',
+                                message: '即将跳转至取餐页面...',
+                                }).then(action => {
+                                if(action === 'confirm'){
+                                    this.$store.commit("clearList")
+                                    sessionStorage.setItem("orderId",orderId)
+                                    this.$router.push("/Takemeal")
+                                     this.$store.commit("changeBarId",'takeMeal')
+                                }
+                                if(action === 'cancel'){
+                                    this.$store.commit("clearList")
+                                    this.$router.push("/settlement")
+                                    
+                                }
+                                }).catch(err => {
+                                alert('错误的操作');
+                                })
+                             }
+                         })
+                     }
+                 })
+            });
+            // let order_product_name=
+            // this.axios.post("/add",)
         }
-    }
   },
     watch: {
         valueChoose(val) {
             console.log(val)
         }
     },
-        created(){
-            // 设置单选框的样式，网上找到的
-            setTimeout(()=>{ 
-                $('.mint-radio-core').removeClass('mint-radio-core').addClass('mint-radio-core');
-                $('.mint-radio-input:checked + .mint-radio-core').removeClass('.mint-radio-input:checked + .mint-radio-core').addClass('.mint-radio-input:checked + .mint-radio-core')
-                
-            },10);
+    created(){
+        // 设置单选框的样式，网上找到的
+        setTimeout(()=>{ 
+            $('.mint-radio-core').removeClass('mint-radio-core').addClass('mint-radio-core');
+            $('.mint-radio-input:checked + .mint-radio-core').removeClass('.mint-radio-input:checked + .mint-radio-core').addClass('.mint-radio-input:checked + .mint-radio-core')
+            
+        },10);
+    },
+    mounted() {
+        $('div:empty , li:empty').remove()
+        var leng = $(".product_bool .mint-cell").length;
+        console.log(leng)
+        if(leng > 3) {
+            $(".more").css("display","block")
+            $(".all_product").addClass('product_hidden')
+        } else if(leng<=3){
+            $(".more").css("display","none")
+            $(".all_product").removeClass('product_hidden')
         }
+    }
 }
+
+
 </script>

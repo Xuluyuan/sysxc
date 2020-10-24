@@ -1,10 +1,10 @@
 <template>
-<div class="foot" id="cart" v-show="totalCount>0" >
+<div class="foot" id="cart" v-show="this.$store.getters.totalCount>0" >
 
         <div class="left_cart" @click="cartDetails()">
             <img src="../assets/images/cart.png" alt="">
             <span class="foot_sum">合计￥{{totalPrice}}元</span>
-            <p class="num">{{totalCount}}</p>
+            <p class="num">{{this.$store.getters.totalCount}}</p>
             <span class="deliveryPrice">另需派送费:￥2元</span>
         </div>
         <button class="right_cart" @click="jumpPay">去结算</button>
@@ -40,44 +40,26 @@ export default {
         return{
         }
     },
-    props:["indicator","btn_index"],
-    mounted(){
-       console.log()
-    },
-    //使用计算属性 计算总价和购买数量
-    computed:{
-        //遍历饮料列表，得到对应的饮料的价格.数量通过vuex中的初始化数量加上遍历得到的下标值取到
-        totalCount(){
-            let totalCount=0;
-            this.$store.state.btn_count.forEach((counts,index)=>{
-                counts.forEach((count,index1)=>{
-                    if(count>0){
-                        totalCount+=count;
-                    }
-                })
-            })
-            localStorage.setItem("totalCount",totalCount)
-            return totalCount
-        },
-        totalPrice(){
-            let totalPrice=0;
-            this.$store.state.btn_count.forEach((counts,index)=>{
+    props:["btn_index"],
+ 
+   computed:{
+        totalPrice(state){
+        let totalPrice=0;
+           this.$store.state.btn_count.forEach((counts,index)=>{
                 counts.forEach((count,index1)=>{
                     if(count>0){
                         totalPrice+=count*this.$store.state.drinkList[index][index1].product_price
                     }
                 })
             })
-            localStorage.setItem("totalPrice",totalPrice)
-            return totalPrice
-        },
-        
-    },
+         return totalPrice
+      }
+   },
     watch:{
         //监视总价格的变化。当总价格等于0时，防护罩隐藏。
         totalPrice(){
             this.$nextTick(()=>{
-                if(this.totalPrice==0){
+                if(this.$store.getters.totalPrice==0){
                     this.$store.commit("changeMask",false)
                  }
             })
@@ -88,7 +70,6 @@ export default {
     methods:{
         //购物车列表中的加减实现
         minus(i1,i2){
-            console.log(this.indicator,this.btn_index)
             if(this.$store.state.btn_count[i1][i2]>0){
             this.$store.commit('dec',{
                 n1:i1,
@@ -97,7 +78,6 @@ export default {
             }
         },
         add(i1,i2){
-            console.log(this.indicator,this.btn_index)
             this.$store.commit('inc',{
             n1:i1,
             n2:i2,
@@ -107,7 +87,7 @@ export default {
         jumpPay(){
             //跳转至支付页面
             //先判断用户是否已经的登录，登录跳转至结算界面，没登陆提示用户登录
-            if(localStorage.getItem("isLogined")==1){
+            if(sessionStorage.getItem("isLogined")==1){
                 this.$router.push("/settlement")
             }else{
                  MessageBox.confirm("",{

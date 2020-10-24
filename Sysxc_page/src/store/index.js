@@ -10,8 +10,8 @@ export default new Vuex.Store({
     //保存商品详情
     drinkList:[],
      //标识用户是否已经登录
-     isLogined:localStorage.getItem('isLogined')==1 ? localStorage.getItem('isLogined') : 0,
-     username:localStorage.getItem('username')!="" ? localStorage.getItem('username') : "",
+     isLogined:sessionStorage.getItem('isLogined')==1 ? sessionStorage.getItem('isLogined') : 0,
+     username:sessionStorage.getItem('username')!="" ? sessionStorage.getItem('username') : "",
      //初始化商品数量
      btn_count:[
        [0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -29,21 +29,25 @@ export default new Vuex.Store({
      cartListShow:false,
      //控制详情页面的显示和隐藏
      specShow:false,
-  
+    //导航栏侧边栏的下标
+    indicator:0,
+    //
+    getCount:[],
+    //存储随机订单号
+    orderId:""
   },
   mutations: {
     //清空商品详情数据
     clearDrinkList(state){
-      // let arr1=[]
-      // let arr2=[]
-      // for(let n=0;n<7;n++){
-      //   for(let m=0;m<2;m++){
-      //     arr1.push(0)
-      //   }
-      //   arr2.push(arr1)
-      // }
-      // state.drinkList
-      // return arr2;
+      state.drinkList=[
+        [0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0]
+      ]
     },
    //生成商品详情
    getDrinkList(state,payload){
@@ -56,6 +60,7 @@ export default new Vuex.Store({
     state.drinkList.push(payload.drink7)
     return state.drinkList;
    },
+
    //改变底部选项卡状态
     changeBarId(state,id){
       state.barId=id;
@@ -69,7 +74,7 @@ export default new Vuex.Store({
     //用户退出系统
     quit(state){
       state.isLogined=0;
-      localStorage.clear()
+      sessionStorage.clear()
     },
     //购物车减法
     dec(state,payload){
@@ -121,6 +126,14 @@ export default new Vuex.Store({
        ],
       state.mask=false;
       state.cartListShow=false;   
+    },
+    //改变侧边栏下标
+    changeSideId(state,i){
+      state.indicator=i
+    },
+    //设置随机订单号
+    setMa(state,id){
+      state.orderId=id
     }
   },
   actions: {
@@ -128,5 +141,34 @@ export default new Vuex.Store({
    },
 
   modules: {
-  }
+  },
+  getters:{
+    //统计仓库中的商品数量，state可以替换为任意的合法名称
+    //但是无论替换成什么名称，其代表的都是当前store中的所有state
+    //计算购物车的总价
+    totalPrice(state){
+      let totalPrice=0;
+           state.btn_count.forEach((counts,index)=>{
+                counts.forEach((count,index1)=>{
+                    if(count>0){
+                        totalPrice+=count*state.drinkList[index][index1].product_price
+                    }
+                })
+            })
+         return totalPrice
+    },
+    //计算购物车的商品数量
+    totalCount(state){
+      let totalCount=0;
+      state.btn_count.forEach((counts,index)=>{
+          counts.forEach((count,index1)=>{
+              if(count>0){
+                  totalCount+=count;
+              }
+          })
+      })
+      return totalCount
+  },
+  
+  },
 })

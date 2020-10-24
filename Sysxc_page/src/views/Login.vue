@@ -45,7 +45,7 @@
     background-color: #EAB488;
   }
  
-a:focus, a:hover {
+.my-login a:focus, a:hover {
     color: #23527c;
     text-decoration:none;
     text-decoration-line:none;
@@ -114,23 +114,21 @@ export default {
           username:this.uname,
           password:this.upwd,
         }
-        console.log(this.qs.stringify(obj))//username=dsddddd&password=111111111
-        console.log(decodeURI(this.qs.stringify(obj)))//username=dsddddd&password=111111111&love[0]=aaa&love[1]=bbb&love[2]=ccc
         this.axios.post('/login',this.qs.stringify(obj)).then(res=>{
-          console.log(res.data.info)
           if(res.data.code==200){
             //储存用户名
-            localStorage.setItem('username',res.data.info.user_name)
+            sessionStorage.setItem('username',res.data.info.user_name)
             //提交mutations
             this.$store.commit("logined",res.data.info)
             //必须要将数据存储到webStorge中，因为用户刷新后记录依旧要保持
-            localStorage.setItem('isLogined',"1")
+            sessionStorage.setItem('isLogined',"1")
             this.$indicator.open({
               text:'加载中...',
               spinnerType:'double-bounce'
             });
             setTimeout(()=>{
-              this.$router.push("/me")
+              this.$router.push("/")
+              this.$store.commit("changeBarId",'index')
                 //关闭加载提示框
               this.$indicator.close();
             },1000)

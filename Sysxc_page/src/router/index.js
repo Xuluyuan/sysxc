@@ -1,11 +1,14 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Ordermeal from '../views/Ordermeal.vue'
-import Home from '../views/Home.vue'
 import Takemeal from '../views/Takemeal.vue'
 import Search from '../views/Search.vue'
 import Login from '../views/Login.vue'
 import Reg from '../views/Reg.vue'
+//xiaoyao
+import Home from '../views/Home.vue'
+import Shop from '../views/Shop.vue'
+import Detail from '../views/Detail.vue'
 //yanxiong
 import Me from '../views/Me.vue'
 import Address from '../views/Address.vue'
@@ -15,6 +18,21 @@ import Settlement from '../views/Settlement.vue'
 Vue.use(VueRouter)
 
 const routes = [
+  //xiaoyao
+  {
+    path: '/detail',
+    component: Detail
+  },
+  {
+    path: '/shop',
+    component: Shop
+  },
+  {
+    path: '/',
+    name: 'Home',
+    component: Home
+  },
+  //xuluyuan
   {
     path: '/ordermeal',
     component: Ordermeal,

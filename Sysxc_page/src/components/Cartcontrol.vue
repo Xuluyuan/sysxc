@@ -1,8 +1,8 @@
 <template>
   <div class="cartCount">
-    <button @click="minus(indicator,btn_index)"  class="minus">-</button>
-    <label class="cart-count">{{this.$store.state.btn_count[indicator][btn_index]}}</label>
-    <button @click="add(indicator,btn_index)" class="add">+</button>
+    <button @click="minus($store.state.indicator,btn_index)"  class="minus">-</button>
+    <label class="cart-count">{{$store.state.btn_count[$store.state.indicator][btn_index]}}</label>
+    <button @click="add($store.state.indicator,btn_index)" class="add">+</button>
   </div>
 </template>
 <script>
@@ -17,14 +17,11 @@ export default {
     drinkList:{
       type:Array
     },
-    indicator:{
-      type:Number
-    }
+
   },
  methods:{
    
   minus(i1,i2){
-    console.log(this.indicator,this.btn_index)
     if(this.$store.state.btn_count[i1][i2]>0){
       this.$store.commit('dec',{
          n1:i1,
@@ -33,7 +30,6 @@ export default {
     }
   },
   add(i1,i2){
-    console.log(this.indicator,this.btn_index)
     this.$store.commit('inc',{
       n1:i1,
       n2:i2,

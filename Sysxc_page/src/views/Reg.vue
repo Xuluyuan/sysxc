@@ -54,7 +54,7 @@
   .mint-header-button.is-right>a{
     line-height: 20px;
   }
-  a:focus, a:hover {
+  .register a:focus, a:hover {
     color: #23527c;
     text-decoration:none;
     text-decoration-line:none;
@@ -184,7 +184,6 @@ export default {
     handle(){
       if(this.checkUname()&&this.checkUpwd()&this.checkagainUpwd()&&this.checkUphone()){
         this.axios.post('/reg',`username=${this.uname}&password=${this.upwd}&tellphone=${this.uphone}`).then(res=>{
-          console.log(1)
           if(res.data.code==201){
             // this.$messagebox("注册成功！","即将跳转至登录页面...")
             // setTimeout(()=>{

@@ -16,7 +16,8 @@ const routerPush = Router.prototype.push
 Router.prototype.push = function push(location) {
     return routerPush.call(this, location).catch(error => error)
 }
-axios.defaults.baseURL = 'http://127.0.0.1:8888'
+// axios.defaults.baseURL = 'http://127.0.0.1:8888'
+axios.defaults.baseURL="/api"
 Vue.prototype.axios = axios;
 Vue.prototype.qs = qs;
 Vue.config.productionTip = false

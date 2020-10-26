@@ -11,7 +11,7 @@
     </mt-header>
     <!-- 顶部导航结束 -->
     <div class="reg-img">
-      <img src="/img/logo.png" alt="">
+      <img src="../assets/images/logo.png" alt="">
     </div>
   <!-- 注册页面开始 -->
   <div>

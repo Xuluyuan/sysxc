@@ -6,16 +6,16 @@
                 <mt-tab-item>
                     <div id='xuang'>
                         <p>
-                            <img src="/img/touxain.jpg" alt="">
+                            <img src="../assets/images/touxain.jpg" alt="">
                             <span v-if="this.$store.state.isLogined==0">
                                 <router-link to="/login">登录</router-link>
                                 <label >/</label>
                                 <router-link to="/reg">注册</router-link>
                             </span>
                             <span v-else>
-                                <router-link to="/me">{{this.$store.state.username}}</router-link>
+                                <router-link to="/me">{{username}}</router-link>
                                 <label >/</label>
-                                <button id="my-button" @click="quit">退出</button>
+                                <button id="my-button" @click="my_quit">退出</button>
                             </span>
                            
                         </p>
@@ -36,11 +36,11 @@
                     <mt-tab-container-item>
                         <div id="d1">
                             <div id="left">
-                              <img src="../../public/img/huiyuan.png" alt="">
+                              <img src="../assets/images/huiyuan.png" alt="">
                               <span>会员等级</span> 
                             </div>
                             <div id="right">
-                              <img src="../../public/img/arrow-right-ico.png" alt="">
+                              <img src="../assets/images/arrow-right-ico.png" alt="">
                             </div>
                         </div>
                     </mt-tab-container-item>           
@@ -49,11 +49,11 @@
                     <mt-tab-container-item>
                         <div id="d1">
                             <div id="left">
-                              <img src="../../public/img/fulishe.png" alt="">
+                              <img src="../assets/images/fulishe.png" alt="">
                                <span>福利社</span> 
                             </div>
                             <div id="right">
-                              <img src="../../public/img/arrow-right-ico.png" alt="">
+                              <img src="../assets/images/arrow-right-ico.png" alt="">
                             </div>
                         </div>
                     </mt-tab-container-item>           
@@ -62,11 +62,11 @@
                     <mt-tab-container-item>
                         <div id="d1">
                             <div id="left">
-                              <img src="../../public/img/huiyuanma.png" alt="">
+                              <img src="../assets/images/huiyuanma.png" alt="">
                                <span>会员码</span> 
                             </div>
                             <div id="right">
-                              <img src="../../public/img/arrow-right-ico.png" alt="">
+                              <img src="../assets/images/arrow-right-ico.png" alt="">
                             </div>
                         </div>
                     </mt-tab-container-item>           
@@ -75,11 +75,11 @@
                     <mt-tab-container-item>
                         <div id="d1">
                             <div id="left">
-                              <img src="../../public/img/jifenshangcheng-jifen.png" alt="">
+                              <img src="../assets/images/jifenshangcheng-jifen.png" alt="">
                                <span>积分商城</span> 
                             </div>
                             <div id="right">
-                              <img src="../../public/img/arrow-right-ico.png" alt="">
+                              <img src="../assets/images/arrow-right-ico.png" alt="">
                             </div>
                         </div>
                     </mt-tab-container-item>           
@@ -88,11 +88,11 @@
                     <mt-tab-container-item>
                         <div id="d1">
                             <div id="left">
-                              <img src="../../public/img/wodedingdan.png" alt="">
+                              <img src="../assets/images/wodedingdan.png" alt="">
                                <span>我的订单</span> 
                             </div>
                             <div id="right">
-                              <img src="../../public/img/arrow-right-ico.png" alt="">
+                              <img src="../assets/images/arrow-right-ico.png" alt="">
                             </div>
                         </div>
                     </mt-tab-container-item>           
@@ -103,11 +103,11 @@
                         
                         <div id="d1">
                             <div id="left">
-                              <img src="../../public/img/shouhuodizhi-dingwei.png" alt="">
+                              <img src="../assets/images/shouhuodizhi-dingwei.png" alt="">
                                <span>收获地址</span> 
                             </div>
                             <div id="right">
-                              <img src="../../public/img/arrow-right-ico.png" alt="">
+                              <img src="../assets/images/arrow-right-ico.png" alt="">
                             </div>
                         </div>
                         
@@ -118,11 +118,11 @@
                     <mt-tab-container-item>
                         <div id="d1">
                             <div id="left">
-                              <img src="../../public/img/duihuanma.png" alt="">
+                              <img src="../assets/images/duihuanma.png" alt="">
                                <span>兑换码</span> 
                             </div>
                             <div id="right">
-                              <img src="../../public/img/arrow-right-ico.png" alt="">
+                              <img src="../assets/images/arrow-right-ico.png" alt="">
                             </div>
                         </div>
                     </mt-tab-container-item>           
@@ -131,11 +131,11 @@
                     <mt-tab-container-item>
                         <div id="d1">
                             <div id="left">
-                              <img src="../../public/img/jidiansong.png" alt="">
+                              <img src="../assets/images/jidiansong.png" alt="">
                                <span>集点送</span> 
                             </div>
                             <div id="right">
-                              <img src="../../public/img/arrow-right-ico.png" alt="">
+                              <img src="../assets/images/arrow-right-ico.png" alt="">
                             </div>
                         </div>
                     </mt-tab-container-item>           
@@ -144,11 +144,11 @@
                     <mt-tab-container-item>
                         <div id="d1">
                             <div id="left">
-                              <img src="../../public/img/yaoqingyouli.png" alt="">
+                              <img src="../assets/images/yaoqingyouli.png" alt="">
                                <span>邀请有礼</span> 
                             </div>
                             <div id="right">
-                              <img src="../../public/img/arrow-right-ico.png" alt="">
+                              <img src="../assets/images/arrow-right-ico.png" alt="">
                             </div>
                         </div>
                     </mt-tab-container-item>           
@@ -164,8 +164,13 @@ import myBottom from '../components/Bottom'
 import { MessageBox } from 'mint-ui'
 export default {
   components:{myBottom},
+  data(){
+      return{
+          username:sessionStorage.getItem('username')
+      }
+  },
   methods:{
-    quit(){
+    my_quit(){
          MessageBox.confirm("",{
              title:"提示",
              message:"确认退出吗",

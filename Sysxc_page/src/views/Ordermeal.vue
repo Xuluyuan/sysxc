@@ -119,7 +119,7 @@ export default {
     this.axios.get("/category").then(res=>{
       let data=res.data.results;
       data.forEach(ele=>{
-        ele.class_pic=require(`../assets/img/${ele.class_pic}`)
+        ele.class_pic=require(`../assets/images/${ele.class_pic}`)
       })
       this.descs=data
     })

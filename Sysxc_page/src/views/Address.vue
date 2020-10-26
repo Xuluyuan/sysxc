@@ -11,7 +11,7 @@
             <mt-tab-container v-if="info.length==0">
                 <mt-tab-container-item class="container">
                     <div id="dizhi">
-                        <img src="../../public/img/shouhuo-dizhi.png" alt="">
+                        <img src="../assets/images/shouhuo-dizhi.png" alt="">
                         <p>您还没有收获地址，快去添加一个吧</p>
                     </div>
                 </mt-tab-container-item>

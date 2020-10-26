@@ -9,7 +9,7 @@
     </router-link>
   </mt-header>
   <div class="reg-img">
-    <img src="/img/logo.png" alt="">
+    <img src="../assets/images/logo.png" alt="">
   </div>
   <div>
     <mt-field type="text" placeholder="请输入用户名" label="用户名" v-model="uname" @blur.native.capture="checkUname" :state="unameState"></mt-field>
@@ -128,6 +128,7 @@ export default {
             });
             setTimeout(()=>{
               this.$router.push("/")
+              // location.href="http://localhost:8080/"
               this.$store.commit("changeBarId",'index')
                 //关闭加载提示框
               this.$indicator.close();

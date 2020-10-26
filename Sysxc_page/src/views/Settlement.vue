@@ -591,8 +591,6 @@ export default {
             this.$store.state.btn_count.forEach((counts,index1)=> {
                  this.$store.state.drinkList[index1].forEach((drink,index2)=>{
                      if(this.$store.state.btn_count[index1][index2]>0){
-                         console.log(drink)
-                         console.log(this.$store.state.btn_count[index1][index2])
                          let count=this.$store.state.btn_count[index1][index2]
                          let price=drink.product_price;
                          let total=count*price;
@@ -600,9 +598,7 @@ export default {
                          let img=drink.product_pic.slice(5)
                          this.$store.commit("setMa",Math.round(new Date().getTime()/1000))
                          let orderId=this.$store.state.orderId
-                          console.log(count,price,total)
                          this.axios.post("/add",`order_product_name=${drink.product_name}&order_product_total=${total}&order_product_count=${count}&order_product_id=${orderId}&order_product_pic=${img}`).then(res=>{
-                             console.log(res.data.code)
                              if(res.data.code==200){
                                 MessageBox.confirm('',{
                                 title: '支付成功',

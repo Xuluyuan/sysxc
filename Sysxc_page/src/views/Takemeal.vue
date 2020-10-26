@@ -5,7 +5,7 @@
         <button slot="left" class="back" @click="back">返回</button>
        </mt-header>
        <div  v-if="this.$store.state.orderId==null">
-        <img src="../assets/img/shibai.gif" alt="" class="failImg">
+        <img src="../assets/images/shibai.gif" alt="" class="failImg">
         <p class="failText">您还有没有下单哟...</p>
        </div>
       <div v-else >
@@ -28,7 +28,7 @@
                     <span>{{getTotal}}元</span>
                     <p>订单号：{{$store.state.orderId}}</p>
                     <p>购买数量：{{getCount}}份</p>
-                    <p>用户：{{$store.state.username}}</p>
+                    <p>用户：{{username}}</p>
                     <p>商家：书亦烧仙草</p>
                 </div> 
             </div>
@@ -57,7 +57,7 @@ export default {
       return count;
     },
     getTotal(){
-      let total=0
+      let total=2
       this.lists.forEach((list,index)=>{
         total+=list.order_product_total
       })
@@ -68,7 +68,8 @@ export default {
     return{
       lists:[],
       succse:false,
-      time:new Date().toLocaleString()
+      time:new Date().toLocaleString(),
+      username:sessionStorage.getItem("username")
     }
   },
   mounted(){

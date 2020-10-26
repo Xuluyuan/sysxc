@@ -10,9 +10,9 @@ app.listen(8888,()=>{
 app.use(bodyParser.urlencoded({
   extended:false
 }));
-app.use(cors({
-  origin:['http://127.0.0.1:8080','http://localhost:8080']
-}))
+// app.use(cors({
+//   origin:['http://127.0.0.1:8080','http://localhost:8080']
+// }))
 
 //用户注册的接口
 app.post('/reg',(req,res)=>{

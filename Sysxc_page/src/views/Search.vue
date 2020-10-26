@@ -8,7 +8,7 @@
     <mt-search v-model="value" class="value" @blur.native.capture="searchData" ></mt-search>
      <div class="fail" v-show="searchList.length==0" v-if="value!=''">
        <!--   -->
-      <img src="../assets/img/shibai.gif" alt="" class="failImg">
+      <img src="../assets/images/shibai.gif" alt="" class="failImg">
       <p class="failText">没有找到您喜欢的...</p>
     </div>
     <!-- <div v-show="value==''" style="padding:20px;color:red">

@@ -607,8 +607,8 @@ export default {
                                 if(action === 'confirm'){
                                     this.$store.commit("clearList")
                                     sessionStorage.setItem("orderId",orderId)
+                                    this.$store.commit("changeBarId",'takeMeal')
                                     this.$router.push("/Takemeal")
-                                     this.$store.commit("changeBarId",'takeMeal')
                                 }
                                 if(action === 'cancel'){
                                     this.$store.commit("clearList")
@@ -643,7 +643,6 @@ export default {
     mounted() {
         $('div:empty , li:empty').remove()
         var leng = $(".product_bool .mint-cell").length;
-        console.log(leng)
         if(leng > 3) {
             $(".more").css("display","block")
             $(".all_product").addClass('product_hidden')

@@ -4,15 +4,15 @@ const bodyParser=require('body-parser');
 const cors=require('cors')
 const md5=require('md5');
 const app=express();
-app.listen(8888,()=>{
+app.listen(5050,()=>{
   console.log('server is running')
 });
 app.use(bodyParser.urlencoded({
   extended:false
 }));
-// app.use(cors({
-//   origin:['http://127.0.0.1:8080','http://localhost:8080']
-// }))
+app.use(cors({
+  origin:['http://127.0.0.1:8080','http://localhost:8080','http://127.0.0.1:8081','http://localhost:8081']
+}))
 
 //用户注册的接口
 app.post('/reg',(req,res)=>{

@@ -3,8 +3,8 @@
     <!-- 顶部 -->
     <div class="top">
       <div class="address">
-        <p><span style="font-weight:bolder">2786书亦烧仙草深圳龙华星光城店 ><br> </span><span>约6.9km  </span><span style="font-size:12px;color:#999">广东省深圳市龙华区街道清泉路9号</span></p>
-        <div><mt-button size="small" class="my-button">到店</mt-button></div>
+        <p><span style="font-weight:bolder">2786书亦烧仙草深圳龙华星光城店 ><br> </span><span style="font-size:12px;color:#999" id="address">{{address}}</span></p>
+        <div><mt-button size="small" class="my-button" @click="map">到店</mt-button></div>
       </div>
     </div>
     <!-- 左侧选项卡 -->
@@ -53,7 +53,9 @@
   <div class="mask" v-show="$store.state.mask==true"></div>
 </div>
 </template>
+
 <script>
+import {MP} from '../map.js'
 import myCart from '../components/Cart'
 import myBottom from '../components/Bottom'
 import myDetails from '../components/Details'
@@ -70,7 +72,8 @@ export default {
       spec_price:0,
       btn_index:0,
       // btn_count:this.$store.state.btn_count[this.btn_index],
-      getCount:[]
+      getCount:[],
+     address:sessionStorage.getItem("address")
     }
   },
   methods:{
@@ -112,6 +115,9 @@ export default {
           this.$store.commit("changeMask",true)
         }
      },
+     map(){
+       this.$router.push("/map")
+     }
   },
 
   mounted(){
@@ -174,10 +180,6 @@ export default {
         drink6:drink6,
         drink7:drink7
       }
-
-      // if( this.$store.state.drinkList.length!=0){
-      //    this.$store.commit("clearDrinkList")
-      // }
      
       this.$store.commit("getDrinkList",obj)
     })
@@ -187,7 +189,37 @@ export default {
     window.setTimeout(()=>{
       liEle[0].className="active"
     },500)
-   
+
+     this.$nextTick(() => {
+      const _this = this
+      MP(_this.ak).then(BMap => {
+        // _this.initMap()
+      })
+    });
+     let geo=navigator.geolocation;
+    //调用getCurrentPosition()方法
+    geo.getCurrentPosition(
+      (position)=>{
+        //获取GeolocationPositionCoordinates对象
+        let coords=position.coords;
+        //获取经度
+        let longitude=coords.longitude;
+        //获取纬度
+        let latitude = coords.latitude;
+        //创建地图实例
+        let map = new BMap.Map('container');
+        //创建地图点坐标对象 -- Point对象
+        // let point = new BMap.Point(longitude,latitude);
+        let point=new BMap.Point(114.045556,22.628732)   
+        //反地址解析
+        let geocoder=new BMap.Geocoder()
+        geocoder.getLocation(point,(result)=>{
+          // document.getElementById('address').innerHTML=result.address
+          sessionStorage.setItem("address",result.address)
+          console.log(this.$store.state.address)
+        })
+      },
+    )
   },
 }
 

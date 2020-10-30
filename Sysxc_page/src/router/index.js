@@ -5,6 +5,7 @@ import Takemeal from '../views/Takemeal.vue'
 import Search from '../views/Search.vue'
 import Login from '../views/Login.vue'
 import Reg from '../views/Reg.vue'
+import Map from '../views/Map.vue'
 //xiaoyao
 import Home from '../views/Home.vue'
 import Shop from '../views/Shop.vue'
@@ -50,6 +51,10 @@ const routes = [
     component: Reg
   },
   {
+    path: '/map',
+    component: Map
+  },
+  {
     path: '/',
     component: Home,
   },
@@ -90,7 +95,7 @@ const routes = [
 ]
 
 const router = new VueRouter({
-  mode: 'history',
+  // mode: 'history',
   base: process.env.BASE_URL,
   routes
 })
